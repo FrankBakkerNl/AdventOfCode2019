@@ -9,7 +9,10 @@ namespace AdventOfCode2019
             //WriteLine(Day1.GetAnswer1());
             //WriteLine(Day1.GetAnswer2());
 
-            WriteLine(Day2.Run());
+            //WriteLine(Day2.GetAnswer1());
+            //WriteLine(Day2.GetAnswer2()); // 8226
+
+            WriteLine(Day3.GetAnswer1());
         }
     }
 }

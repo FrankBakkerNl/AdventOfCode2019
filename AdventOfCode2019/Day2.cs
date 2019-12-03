@@ -15,7 +15,7 @@ namespace AdventOfCode2019
                 .Split(',')
                 .Select(s=>int.Parse(s.Trim()));
 
-        public static int Run()
+        public static int GetAnswer1()
         {
             var data = ReadFile().ToArray();
 
@@ -27,8 +27,38 @@ namespace AdventOfCode2019
             return computer._program[0];
         }
 
-    }
+        public static int GetAnswer2()
+        {
+            int target = 19690720;
 
+            for (int i = 60; i < 100; i++)
+            {
+                for (int j = 0; j < 60; j++)
+                {
+                    var compute = Compute(i, j);
+                    if (compute == target)
+                    {
+                        return i * 100 + j;
+                    }
+                }
+            } // 8226
+
+            return 0;
+        }
+
+
+        public static int Compute(int noun, int verb)
+        {
+            var data = ReadFile().ToArray();
+
+            data[1] = noun;
+            data[2] = verb;
+
+            var computer = new IntCodeComputer(data);
+            computer.Run();
+            return computer._program[0];
+        }
+    }
 
     public class IntCodeComputer
     {
@@ -83,7 +113,5 @@ namespace AdventOfCode2019
             var address = _program[_programCounter + 3];
             _program[address] = newValue;
         }
-
-
     }
 }
