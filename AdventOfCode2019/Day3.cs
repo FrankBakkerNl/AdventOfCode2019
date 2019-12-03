@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Microsoft.VisualBasic.FileIO;
 
 namespace AdventOfCode2019
 {
@@ -11,47 +9,59 @@ namespace AdventOfCode2019
     {
         public static int GetAnswer1()
         {
-
             var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day3.txt");
-
             return FindFirstIntersection(lines[0], lines[1]);
-                
-
         }
+
+
+        public static int GetAnswer2()
+        {
+            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day3.txt");
+            return FindClosestIntersection(lines[0], lines[1]);
+        }
+
 
         public static int FindFirstIntersection(string firstWire, string secondWire)
         {
-            var firstVisits = GetVisits(firstWire);
-            var secondVisits = GetVisits(secondWire);
+            var firstVisits = GetVisitsWithDistance(firstWire).Select(c=>c.cell);
+            var secondVisits = GetVisitsWithDistance(secondWire).Select(c=>c.cell);
             var intersections = firstVisits.Intersect(secondVisits);
-            return intersections.Select(Distance).Min();
+            return intersections.Select(TaxiDistance).Min();
         }
 
-        public static int Distance((int, int) point) => Math.Abs(point.Item1) + Math.Abs(point.Item2);
 
-        public static HashSet<(int, int)> GetVisits(string route)
+        public static int FindClosestIntersection(string firstWire, string secondWire)
+        {
+            var firstVisits = GetVisitsWithDistance(firstWire);
+            var secondVisits = GetVisitsWithDistance(secondWire);
+
+            return firstVisits.Join(secondVisits, f => f.cell, s => s.cell, (f, s) => f.distance + s.distance).Min();
+        }
+
+        public static int TaxiDistance((int x, int y) point) => Math.Abs(point.x) + Math.Abs(point.y);
+
+
+        public static IEnumerable<((int, int) cell, int distance)> GetVisitsWithDistance(string route)
         {
             var paths = route.Split(',').Select(ParsePath);
 
-            HashSet<(int,int)> visited = new HashSet<(int, int)>();
             int x = 0; 
             int y = 0;
+            int distance = 0;
             foreach (var (direction, length) in paths)
             {
                 var (xd, yd) = MapDirection(direction);
                 for (int i = 0; i < length; i++)
                 {
+                    distance++;
                     x += xd;
                     y += yd;
-                    visited.Add((x, y));
+                    yield return ((x, y), distance);
                 }
             }
-            return visited;
         }
 
-
         private static (char, int) ParsePath(string s) => (s[0], int.Parse(s.Substring(1)));
-
 
         public static (int, int) MapDirection(char direction) =>
             direction switch
