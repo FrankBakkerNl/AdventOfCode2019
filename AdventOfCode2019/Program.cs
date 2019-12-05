@@ -1,4 +1,5 @@
-﻿using static System.Console;
+﻿using System.Linq;
+using static System.Console;
 
 namespace AdventOfCode2019
 {
@@ -19,6 +20,11 @@ namespace AdventOfCode2019
             WriteLine("Day 3:");
             WriteLine(Day3.GetAnswer1()); // 721
             WriteLine(Day3.GetAnswer2()); // 7388
+            WriteLine();
+
+            WriteLine("Day 4:"); // 1610
+            WriteLine(Day4.GetAnswer1()); 
+            WriteLine(Day4.GetAnswer2());
             WriteLine();
         }
     }
