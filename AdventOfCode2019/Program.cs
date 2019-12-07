@@ -23,8 +23,13 @@ namespace AdventOfCode2019
             WriteLine();
 
             WriteLine("Day 4:"); // 1610
-            WriteLine(Day4.GetAnswer1()); 
+            WriteLine(Day4.GetAnswer1());
             WriteLine(Day4.GetAnswer2());
+            WriteLine();
+
+            WriteLine("Day 5:"); 
+            WriteLine(Day5.GetAnswer1()); //9219874
+            WriteLine(Day5.GetAnswer2());
             WriteLine();
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -24,7 +23,7 @@ namespace AdventOfCode2019
 
             var computer = new IntCodeComputer(data);
             computer.Run();
-            return computer._program[0];
+            return computer.Program[0];
         }
 
         public static int GetAnswer2()
@@ -56,62 +55,7 @@ namespace AdventOfCode2019
 
             var computer = new IntCodeComputer(data);
             computer.Run();
-            return computer._program[0];
-        }
-    }
-
-    public class IntCodeComputer
-    {
-
-        private int _programCounter = 0;
-        public int[] _program;
-
-        public IntCodeComputer(IEnumerable<int> program)
-        {
-            _program = program.ToArray();
-        }
-
-
-
-        public void Run()
-        {
-            while (Process())
-            {
-                _programCounter += 4;
-            }
-        }
-
-        public bool Process()
-        {
-            int instruction = _program[_programCounter];
-            switch (instruction)
-            {
-                case 1:
-                    Add();
-                    break;
-                case 2:
-                    Multiply();
-                    break;
-                case 99:
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Invalid opcode {instruction}");
-            }
-
-            return true;
-        }
-
-        private void Add()
-        {
-            var newValue = _program[_program[_programCounter + 1]] + _program[_program[_programCounter + 2]];
-            var address = _program[_programCounter + 3];
-            _program[address] = newValue;
-        }
-        private void Multiply()
-        {
-            var newValue = _program[_program[_programCounter + 1]] * _program[_program[_programCounter + 2]];
-            var address = _program[_programCounter + 3];
-            _program[address] = newValue;
+            return computer.Program[0];
         }
     }
 }
