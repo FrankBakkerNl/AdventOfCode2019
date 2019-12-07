@@ -25,5 +25,26 @@ J)K
 K)L";
             Day6.GetTotalOrbits(example).Should().Be(42);
         }
+
+        [Fact]
+        public void Sample2OrbitTransfer()
+        {
+            const string example = @"COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+K)YOU
+I)SAN";
+
+
+            Day6.GetOrbitTransfers(example, "YOU", "SAN").Should().Be(4);
+        }
     }
 }
