@@ -21,7 +21,10 @@ namespace AdventOfCode2019
 
         public static int GetAnswer2()
         {
-            return 0;
+            var computer = new IntCodeComputer(PuzzleInput);
+            computer.Run(5);
+            var result = computer.Output;
+            return result.Last();
         }
     }
 

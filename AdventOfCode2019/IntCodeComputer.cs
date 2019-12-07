@@ -16,8 +16,7 @@ namespace AdventOfCode2019
 
         public IntCodeComputer(string program) : this(program.Split(',')
             .Select(s=>int.Parse(s.Trim())))
-        {
-        }
+        {}
 
         public IntCodeComputer(IEnumerable<int> program)
         {
@@ -44,23 +43,70 @@ namespace AdventOfCode2019
             {
                 case 1:
                     Add();
-                    break;
+                    return true;
                 case 2:
                     Multiply();
-                    break;
+                    return true;
                 case 3:
                     ReadInput();
-                    break;
+                    return true;
                 case 4:
                     WriteOutput();
-                    break;
+                    return true;
+                case 5:
+                    JumpIfTrue();
+                    return true;
+                case 6:
+                    JumpIfFalse();
+                    return true;
+                case 7:
+                    LessThan();
+                    return true;
+                case 8:
+                    Equals();
+                    return true;
                 case 99:
                     return false;
                 default:
                     throw new InvalidOperationException($"Invalid opcode {instruction} at {_programCounter}");
             }
+        }
 
-            return true;
+        private void JumpIfTrue()
+        {
+            if (GetParam(1) != 0)
+            {
+                _programCounter = GetParam(2);
+            }
+            else
+            {
+                _programCounter += 3;
+            }
+        }
+
+        private void LessThan()
+        {
+            Store(GetParam(1) < GetParam(2) ? 1 : 0, 3);
+            _programCounter += 4;
+        }
+
+        private void Equals()
+        {
+            Store(GetParam(1) == GetParam(2) ? 1 : 0, 3);
+            _programCounter += 4;
+        }
+
+
+        private void JumpIfFalse()
+        {
+            if (GetParam(1) == 0)
+            {
+                _programCounter = GetParam(2);
+            }
+            else
+            {
+                _programCounter += 3;
+            }
         }
 
         private void Add()
@@ -100,5 +146,11 @@ namespace AdventOfCode2019
         int GetDigit(int input, int number) => input / (int) Math.Pow(10, number) % 10;
 
 
+        public override string ToString()
+        {
+            var start = string.Join(',', Program.Take(_programCounter));
+            var rest = string.Join(',', Program.Skip(_programCounter));
+            return start + ">>" + rest;
+        }
     }
 }
