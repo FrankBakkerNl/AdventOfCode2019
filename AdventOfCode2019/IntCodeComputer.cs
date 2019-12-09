@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 namespace AdventOfCode2019
 {
@@ -10,7 +9,7 @@ namespace AdventOfCode2019
         private int _programCounter = 0;
         public int[] Program;
 
-        public int Input { get; set; }
+        public Queue<int> Input { get; set; } = new Queue<int>();
         public List<int> Output { get; } = new List<int>();
 
 
@@ -25,7 +24,7 @@ namespace AdventOfCode2019
 
         public void Run(int input)
         {
-            Input = input;
+            Input.Enqueue(input);
             Run();
         }
 
@@ -123,7 +122,7 @@ namespace AdventOfCode2019
 
         private void ReadInput()
         {
-            Store(Input, 1);
+            Store(Input.Dequeue(), 1);
             _programCounter += 2;
         }
 
