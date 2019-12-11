@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,8 +10,8 @@ namespace AdventOfCode2019
         private int _programCounter = 0;
         public int[] Program;
 
-        public Queue<int> Input { get; set; } = new Queue<int>();
-        public List<int> Output { get; } = new List<int>();
+        public BlockingCollection<int> Input { get; set; } = new BlockingCollection<int>(new ConcurrentQueue<int>());
+        public BlockingCollection<int> Output { get; } = new BlockingCollection<int>(new ConcurrentQueue<int>());
 
 
         public IntCodeComputer(string program) : this(program.Split(',')
@@ -22,9 +23,16 @@ namespace AdventOfCode2019
             Program = program.ToArray();
         }
 
+        public IntCodeComputer(IEnumerable<int> program, BlockingCollection<int> input)
+        {
+            Program = program.ToArray();
+            Input = input;
+        }
+
+
         public void Run(int input)
         {
-            Input.Enqueue(input);
+            Input.Add(input);
             Run();
         }
 
@@ -122,7 +130,7 @@ namespace AdventOfCode2019
 
         private void ReadInput()
         {
-            Store(Input.Dequeue(), 1);
+            Store(Input.Take(), 1);
             _programCounter += 2;
         }
 

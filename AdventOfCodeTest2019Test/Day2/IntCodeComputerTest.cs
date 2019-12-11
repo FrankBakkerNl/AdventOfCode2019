@@ -33,7 +33,7 @@ namespace AdventOfCodeTest2019Test.Day2
         {
             var intCodeComputer = new IntCodeComputer("3,0,4,0,99");
             intCodeComputer.Run(42);
-            intCodeComputer.Output[0].Should().Be(42);
+            intCodeComputer.Output.Take().Should().Be(42);
         }
 
 
@@ -92,7 +92,7 @@ namespace AdventOfCodeTest2019Test.Day2
         private static int RunIO(string program, int input)
         {
             var computer = new IntCodeComputer(program );
-            computer.Input = input;
+            computer.Input.Add(input);
             computer.Run();
             return computer.Output.Last();
         }
