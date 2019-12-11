@@ -32,19 +32,24 @@ namespace AdventOfCode2019
             WriteLine(Day5.GetAnswer2()); // 5893654
             WriteLine();
 
-            WriteLine("Day 6:"); 
+            WriteLine("Day 6:");
             WriteLine(Day6.GetAnswer1()); // 151345 
-            WriteLine(Day6.GetAnswer2()); 
+            WriteLine(Day6.GetAnswer2());
             WriteLine();
 
-            WriteLine("Day 7:"); 
+            WriteLine("Day 7:");
             WriteLine(Day7.GetAnswer1());
-            WriteLine(Day7.GetAnswer2()); 
+            WriteLine(Day7.GetAnswer2());
             WriteLine();
 
-            WriteLine("Day 8:"); 
+            WriteLine("Day 8:");
             WriteLine(Day8.GetAnswer1());
-            WriteLine(Day8.GetAnswer2()); 
+            WriteLine(Day8.GetAnswer2());
+            WriteLine();
+
+            WriteLine("Day 9:"); 
+            WriteLine(Day9.GetAnswer1());
+            WriteLine(Day9.GetAnswer2()); 
             WriteLine();
         }
     }

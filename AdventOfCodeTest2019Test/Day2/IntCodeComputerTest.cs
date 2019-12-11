@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using AdventOfCode2019;
 using FluentAssertions;
@@ -89,7 +90,7 @@ namespace AdventOfCodeTest2019Test.Day2
             return string.Join(",", computer.Program.Select(s=>s.ToString(CultureInfo.InvariantCulture)));
         }
 
-        private static int RunIO(string program, int input)
+        private static BigInteger RunIO(string program, int input)
         {
             var computer = new IntCodeComputer(program );
             computer.Input.Add(input);

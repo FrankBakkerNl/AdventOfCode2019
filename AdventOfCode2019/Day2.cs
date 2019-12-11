@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace AdventOfCode2019
@@ -14,7 +15,7 @@ namespace AdventOfCode2019
                 .Split(',')
                 .Select(s=>int.Parse(s.Trim()));
 
-        public static int GetAnswer1()
+        public static BigInteger GetAnswer1()
         {
             var data = ReadFile().ToArray();
 
@@ -46,7 +47,7 @@ namespace AdventOfCode2019
         }
 
 
-        public static int Compute(int noun, int verb)
+        public static BigInteger Compute(int noun, int verb)
         {
             var data = ReadFile().ToArray();
 
