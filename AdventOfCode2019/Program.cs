@@ -42,6 +42,10 @@ namespace AdventOfCode2019
             WriteLine(Day7.GetAnswer2()); 
             WriteLine();
 
+            WriteLine("Day 8:"); 
+            WriteLine(Day8.GetAnswer1());
+            WriteLine(Day8.GetAnswer2()); 
+            WriteLine();
         }
     }
 }
