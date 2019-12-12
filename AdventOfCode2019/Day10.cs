@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
 using static System.Math;
 
@@ -9,13 +8,11 @@ namespace AdventOfCode2019
 {
     public class Day10
     {
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day10.txt");
+        public static int GetAnswer1(string input) => FindMaxVisible(input);
 
-        public static int GetAnswer1() => FindMaxVisible(Input);
-
-        public static int GetAnswer2()
+        public static int GetAnswer2(string input)
         {
-            var (x, y) = GetVaporizeOrder(Input).ElementAt(199);
+            var (x, y) = GetVaporizeOrder(input).ElementAt(199);
             return x * 100 + y;
         }
 

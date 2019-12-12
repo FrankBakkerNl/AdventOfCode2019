@@ -1,33 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
-using System.Text;
 using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
     class Day09
     {
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day09.txt");
-
-        public static BigInteger GetAnswer1()
+        public static BigInteger GetAnswer1(string input)
         {
-            var program = Input.Split(',').Select(BigInteger.Parse);
+            var program = input.Split(',').Select(BigInteger.Parse);
             var computer = new IntCodeComputer(program);
-            computer.Input.Add(1);
+            computer.WriteInput(1);
             computer.Run();
-            return computer.Output.Take();
+            return computer.ReadOutput();
         }
 
-        public static BigInteger GetAnswer2()
+        public static BigInteger GetAnswer2(string input)
         {
-            var program = Input.Split(',').Select(BigInteger.Parse);
+            var program = input.Split(',').Select(BigInteger.Parse);
             var computer = new IntCodeComputer(program);
-            computer.Input.Add(2);
+            computer.WriteInput(2);
             computer.Run();
-            return computer.Output.Take();
+            return computer.ReadOutput();
         }
     }
 }

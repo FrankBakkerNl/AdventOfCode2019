@@ -9,21 +9,15 @@ namespace AdventOfCode2019
     public class Day01
     {
 
-        public static int GetAnswer1()
+        public static int GetAnswer1(string input)
         {
-            return ReadFile.Select(s => int.Parse(s)).Select(Fuel).Sum();
+            return input.Split(Environment.NewLine).Select(int.Parse).Select(Fuel).Sum();
         }
 
-        public static int GetAnswer2()
+        public static int GetAnswer2(string input)
         {
-            return ReadFile.Select(s => int.Parse(s)).Select(CumelativeFuel).Sum();
+            return input.Split(Environment.NewLine).Select(int.Parse).Select(CumelativeFuel).Sum();
         }
-
-
-        public static IEnumerable<string> ReadFile =>
-            File.ReadLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day01.txt");
-
-
 
         public static int CumelativeFuel(int mass)
         {
@@ -40,9 +34,6 @@ namespace AdventOfCode2019
             return totalFuel;
         }
 
-        static int Fuel(int mass)
-        {
-            return (mass / 3) - 2;
-        }
+        static int Fuel(int mass) => (mass / 3) - 2;
     }
 }

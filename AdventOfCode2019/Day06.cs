@@ -8,11 +8,9 @@ namespace AdventOfCode2019
 {
     public class Day06
     {
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day06.txt");
+        public static int GetAnswer1(string input) => GetTotalOrbits(input);
 
-        public static int GetAnswer1() => GetTotalOrbits(Input);
-
-        public static int GetAnswer2() => GetOrbitTransfers(Input, "YOU", "SAN");
+        public static int GetAnswer2(string input) => GetOrbitTransfers(input, "YOU", "SAN");
 
         public static int GetTotalOrbits(string input)
         {

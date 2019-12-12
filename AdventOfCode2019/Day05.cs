@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
+﻿using System.Numerics;
 using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
@@ -17,17 +13,14 @@ namespace AdventOfCode2019
         {
             var computer = new IntCodeComputer(PuzzleInput);
             computer.Run(1);
-            var result = computer.Output;
-            return result.Last();
+            return computer.ReadOutput();
         }
 
         public static BigInteger GetAnswer2()
         {
             var computer = new IntCodeComputer(PuzzleInput);
             computer.Run(5);
-            var result = computer.Output;
-            return result.Last();
+            return computer.ReadOutput();
         }
     }
-
 }

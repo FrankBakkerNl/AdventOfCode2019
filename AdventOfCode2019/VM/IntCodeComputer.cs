@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace AdventOfCode2019.VM
@@ -13,12 +13,11 @@ namespace AdventOfCode2019.VM
         public VirtualMemory Program;
         private BigInteger _relativeBase = 0;
 
-        public BlockingCollection<BigInteger> Input { get; set; } = new BlockingCollection<BigInteger>(new ConcurrentQueue<BigInteger>());
-        public BlockingCollection<BigInteger> Output { get; } = new BlockingCollection<BigInteger>(new ConcurrentQueue<BigInteger>());
-
+        private Channel<BigInteger> _inputChannel = Channel.CreateUnbounded<BigInteger>();
+        private readonly Channel<BigInteger> _outputChannel = Channel.CreateUnbounded<BigInteger>();
 
         public IntCodeComputer(string program) : this(program.Split(',')
-            .Select(s=>int.Parse(s.Trim())))
+            .Select(s=>BigInteger.Parse(s.Trim())))
         {}
 
         public IntCodeComputer(IEnumerable<int> program)
@@ -31,33 +30,40 @@ namespace AdventOfCode2019.VM
             Program = new VirtualMemory(program.ToArray());
         }
 
-        public IntCodeComputer(IEnumerable<int> program, BlockingCollection<BigInteger> input)
-        {
-            Program = new VirtualMemory(program.ToArray());
-            Input = input;
-        }
+        public ValueTask<BigInteger> ReadOutputAsync() => _outputChannel.Reader.ReadAsync();
+
+        public ValueTask WriteInputAsync(BigInteger value) => _inputChannel.Writer.WriteAsync(value);
+
+        public BigInteger ReadOutput() => ReadOutputAsync().AsTask().Result;
+
+        public void WriteInput(BigInteger value) => WriteInputAsync(value).AsTask().Wait();
+
+        public IAsyncEnumerable<BigInteger> Output => _outputChannel.Reader.ReadAllAsync();
 
         public void PipeTo(IntCodeComputer next)
         {
-            next.Input = Output;
+            next._inputChannel = _outputChannel;
         }
 
         public void Run(int input)
         {
-            Input.Add(input);
+            WriteInput(input);
             Run();
         }
 
         public void Run()
         {
-            RunAsync().Wait();
+            if (!RunAsync().IsCompleted)
+            {
+                throw new InvalidOperationException($"Program cannot finish, blocked at instruction {_programCounter}:{Program[_programCounter]}");
+            }
         }
 
         public async Task RunAsync()
         {
             while (await Process())
-            {
-            }
+            {}
+            _outputChannel.Writer.Complete();
         }
 
         public async Task<bool> Process()
@@ -72,10 +78,10 @@ namespace AdventOfCode2019.VM
                     Multiply();
                     return true;
                 case 3:
-                    ReadInput();
+                    await ReadInput();
                     return true;
                 case 4:
-                    WriteOutput();
+                    await WriteOutput();
                     return true;
                 case 5:
                     JumpIfTrue();
@@ -147,15 +153,16 @@ namespace AdventOfCode2019.VM
             _programCounter += 4;
         }
 
-        private void ReadInput()
+        private async Task ReadInput()
         {
-            Store(Input.Take(), 1);
+            var value = await _inputChannel.Reader.ReadAsync();
+            Store(value, 1);
             _programCounter += 2;
         }
 
-        private void WriteOutput()
+        private async Task WriteOutput()
         {
-            Output.Add(GetParam(1));
+            await _outputChannel.Writer.WriteAsync(GetParam(1));
             _programCounter += 2;
         }
 
@@ -183,5 +190,6 @@ namespace AdventOfCode2019.VM
         int Mode(int arg) => GetDigit((int)Program[_programCounter], arg+1);
 
         int GetDigit(int input, int number) => input / (int) Math.Pow(10, number) % 10;
+
     }
 }

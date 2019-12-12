@@ -16,9 +16,9 @@ namespace AdventOfCode2019
         private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day07.txt");
 
 
-        public static BigInteger GetAnswer1() => FindMax(Input.Split(',').Select(int.Parse).ToArray());
+        public static BigInteger GetAnswer1(int[]input) => FindMax(input);
 
-        public static BigInteger GetAnswer2() => FindMaxFeedBack(Input.Split(',').Select(int.Parse).ToArray());
+        public static BigInteger GetAnswer2(int[]input) => FindMaxFeedBack(input);
 
 
         public static BigInteger FindMax(int[] program)
@@ -41,10 +41,10 @@ namespace AdventOfCode2019
             {
                 var amp = new IntCodeComputer(program);
 
-                amp.Input.Add(phaseSetting);
-                amp.Input.Add(lastResult);
+                amp.WriteInput(phaseSetting);
+                amp.WriteInput(lastResult);
                 amp.Run();
-                lastResult = amp.Output.Take();
+                lastResult = amp.ReadOutput();
             }
 
             return lastResult;
@@ -53,7 +53,7 @@ namespace AdventOfCode2019
 
 
         public static BigInteger FindMaxFeedBack(int[] program) 
-            => InputCombinationsFeedback(5).Max(c => GetThrusterSignalFeedback(program, c));
+            => InputCombinationsFeedback(5).Max(c => GetThrusterSignalFeedback(program, c).Result);
 
         static readonly int[] PossibleInputsFeedback = Enumerable.Range(5, 5).ToArray();
 
@@ -63,7 +63,7 @@ namespace AdventOfCode2019
             return InputCombinationsFeedback(number - 1).SelectMany(v1 => PossibleInputsFeedback.Except(v1).Select(v1.Add));
         }
 
-        public static BigInteger GetThrusterSignalFeedback(int[] program, IEnumerable<int> phaseSettings)
+        public static async Task<BigInteger> GetThrusterSignalFeedback(int[] program, IEnumerable<int> phaseSettings)
         {
             phaseSettings = phaseSettings.ToArray();
 
@@ -74,16 +74,15 @@ namespace AdventOfCode2019
             foreach (var (phaseSetting, amp) in phaseSettings.Zip(amps))
             {
                 previousAmp.PipeTo(amp);
-                amp.Input.Add(phaseSetting);
+                await amp.WriteInputAsync(phaseSetting);
                 previousAmp = amp;
             }
 
-            amps[0].Input.Add(0);
-            var tasks = amps.Select(a => Task.Run(a.Run)).ToArray();
-            Task.WaitAll(tasks.ToArray());
+            await amps[0].WriteInputAsync(0);
+            var tasks = amps.Select( a => a.RunAsync()).ToArray();
+            await Task.WhenAll(tasks.ToArray());
 
-            return amps.Last().Output.Take();
+            return await amps.Last().ReadOutputAsync();
         }
-
     }
 }

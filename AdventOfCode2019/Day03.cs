@@ -7,19 +7,9 @@ namespace AdventOfCode2019
 {
     class Day03
     {
-        public static int GetAnswer1()
-        {
-            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day03.txt");
-            return FindFirstIntersection(lines[0], lines[1]);
-        }
+        public static int GetAnswer1(string[] lines) => FindFirstIntersection(lines[0], lines[1]);
 
-
-        public static int GetAnswer2()
-        {
-            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day03.txt");
-            return FindClosestIntersection(lines[0], lines[1]);
-        }
-
+        public static int GetAnswer2(string[] lines) => FindClosestIntersection(lines[0], lines[1]);
 
         public static int FindFirstIntersection(string firstWire, string secondWire)
         {
@@ -39,7 +29,6 @@ namespace AdventOfCode2019
         }
 
         public static int TaxiDistance((int x, int y) point) => Math.Abs(point.x) + Math.Abs(point.y);
-
 
         public static IEnumerable<((int, int) cell, int distance)> GetVisitsWithDistance(string route)
         {

@@ -1,25 +1,14 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
+﻿using System;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
     class Day02
     {
-
-        public static IEnumerable<int> ReadFile() =>
-            File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day02.txt")
-                .Split(',')
-                .Select(s=>int.Parse(s.Trim()));
-
-        public static BigInteger GetAnswer1()
+        public static BigInteger GetAnswer1(int[] data)
         {
-            var data = ReadFile().ToArray();
-
             data[1] = 12;
             data[2] = 2;
 
@@ -28,30 +17,20 @@ namespace AdventOfCode2019
             return computer.Program[0];
         }
 
-        public static int GetAnswer2()
+        public static int GetAnswer2(int[] data)
         {
             int target = 19690720;
+            var domain = Enumerable.Range(0,100);
+            
+            var options = domain.SelectMany(i => domain.Select(j=>(i, j)));
 
-            for (int i = 60; i < 100; i++)
-            {
-                for (int j = 0; j < 60; j++)
-                {
-                    var compute = Compute(i, j);
-                    if (compute == target)
-                    {
-                        return i * 100 + j;
-                    }
-                }
-            } // 8226
+            var (noun, verb) = options.FirstOrDefault(o=>Compute(data, o.i, o.j) == target);
 
-            return 0;
+            return noun * 100 + verb;
         }
 
-
-        public static BigInteger Compute(int noun, int verb)
+        public static BigInteger Compute(int[] data, int noun, int verb)
         {
-            var data = ReadFile().ToArray();
-
             data[1] = noun;
             data[2] = verb;
 
