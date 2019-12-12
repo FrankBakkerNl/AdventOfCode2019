@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AdventOfCode2019
 {
-    public class Day1
+    public class Day01
     {
 
         public static int GetAnswer1()
@@ -21,7 +21,7 @@ namespace AdventOfCode2019
 
 
         public static IEnumerable<string> ReadFile =>
-            File.ReadLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day1.txt");
+            File.ReadLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day01.txt");
 
 
 

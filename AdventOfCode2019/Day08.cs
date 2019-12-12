@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace AdventOfCode2019
 {
-    class Day8
+    class Day08
     {
         private static int ImageWith = 25;
         private static int ImageHight = 6;
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day8.txt");
+        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day08.txt");
 
         public static int GetAnswer1() => GetChecksum(Input.Select(c=>int.Parse(c.ToString())).ToArray(), ImageWith*ImageHight);
 

@@ -6,13 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    public class Day7
+    public class Day07
     {
 
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day7.txt");
+        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day07.txt");
 
 
         public static BigInteger GetAnswer1() => FindMax(Input.Split(',').Select(int.Parse).ToArray());
@@ -66,12 +67,7 @@ namespace AdventOfCode2019
         {
             phaseSettings = phaseSettings.ToArray();
 
-            var amps = new List<IntCodeComputer>();
-            foreach (var _ in phaseSettings)
-            {
-                var amp = new IntCodeComputer(program);
-                amps.Add(amp);
-            }
+            var amps = phaseSettings.Select(_ => new IntCodeComputer(program)).ToList();
 
             // feedback last output to first input
             var previousAmp = amps.Last();

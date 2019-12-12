@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    class Day9
+    class Day09
     {
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day9.txt");
+        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day09.txt");
 
         public static BigInteger GetAnswer1()
         {
@@ -28,6 +29,5 @@ namespace AdventOfCode2019
             computer.Run();
             return computer.Output.Take();
         }
-
     }
 }

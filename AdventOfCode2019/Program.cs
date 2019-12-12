@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using static System.Console;
 
 namespace AdventOfCode2019
@@ -7,50 +9,24 @@ namespace AdventOfCode2019
     {
         static void Main(string[] args)
         {
-            WriteLine("Day 1:");
-            WriteLine(Day1.GetAnswer1());
-            WriteLine(Day1.GetAnswer2());
-            WriteLine();
+            var days = Assembly.GetExecutingAssembly().GetTypes().Where(t => Regex.IsMatch(t.Name, "Day[0-9][0-9]")).OrderBy(t=>t.Name);
+            foreach (var dayClass in days)
+            {
+                WriteLine(dayClass.Name);
 
-            WriteLine("Day 2:");
-            WriteLine(Day2.GetAnswer1());
-            WriteLine(Day2.GetAnswer2()); // 8226
-            WriteLine();
+                var getAnswer1 = dayClass.GetMethod("GetAnswer1");
+                if (getAnswer1 != null)
+                {
+                    WriteLine("1: {0}", getAnswer1.Invoke(null, null));
+                }
 
-            WriteLine("Day 3:");
-            WriteLine(Day3.GetAnswer1()); // 721
-            WriteLine(Day3.GetAnswer2()); // 7388
-            WriteLine();
-
-            WriteLine("Day 4:");
-            WriteLine(Day4.GetAnswer1()); // 1610
-            WriteLine(Day4.GetAnswer2());
-            WriteLine();
-
-            WriteLine("Day 5:");
-            WriteLine(Day5.GetAnswer1()); // 9219874
-            WriteLine(Day5.GetAnswer2()); // 5893654
-            WriteLine();
-
-            WriteLine("Day 6:");
-            WriteLine(Day6.GetAnswer1()); // 151345 
-            WriteLine(Day6.GetAnswer2());
-            WriteLine();
-
-            WriteLine("Day 7:");
-            WriteLine(Day7.GetAnswer1());
-            WriteLine(Day7.GetAnswer2());
-            WriteLine();
-
-            WriteLine("Day 8:");
-            WriteLine(Day8.GetAnswer1());
-            WriteLine(Day8.GetAnswer2());
-            WriteLine();
-
-            WriteLine("Day 9:"); 
-            WriteLine(Day9.GetAnswer1());
-            WriteLine(Day9.GetAnswer2()); 
-            WriteLine();
+                var getAnswer2 = dayClass.GetMethod("GetAnswer1");
+                if (getAnswer2 != null)
+                {
+                    WriteLine("1: {0}", getAnswer2.Invoke(null, null));
+                }
+                WriteLine();
+            }
         }
     }
 }

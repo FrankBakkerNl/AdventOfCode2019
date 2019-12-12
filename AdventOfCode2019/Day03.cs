@@ -5,18 +5,18 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    class Day3
+    class Day03
     {
         public static int GetAnswer1()
         {
-            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day3.txt");
+            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day03.txt");
             return FindFirstIntersection(lines[0], lines[1]);
         }
 
 
         public static int GetAnswer2()
         {
-            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day3.txt");
+            var lines = File.ReadAllLines(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day03.txt");
             return FindClosestIntersection(lines[0], lines[1]);
         }
 

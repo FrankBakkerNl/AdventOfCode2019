@@ -7,7 +7,7 @@ using Xunit;
 
 namespace AdventOfCodeTest2019Test
 {
-    public class Day6Test
+    public class Day06Test
     {
         [Fact]
         public void SampleShouldReturn42()
@@ -23,7 +23,7 @@ D)I
 E)J
 J)K
 K)L";
-            Day6.GetTotalOrbits(example).Should().Be(42);
+            Day06.GetTotalOrbits(example).Should().Be(42);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ K)YOU
 I)SAN";
 
 
-            Day6.GetOrbitTransfers(example, "YOU", "SAN").Should().Be(4);
+            Day06.GetOrbitTransfers(example, "YOU", "SAN").Should().Be(4);
         }
     }
 }

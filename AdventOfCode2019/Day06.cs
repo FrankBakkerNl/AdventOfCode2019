@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    public class Day6
+    public class Day06
     {
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day6.txt");
+        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day06.txt");
 
         public static int GetAnswer1() => GetTotalOrbits(Input);
 

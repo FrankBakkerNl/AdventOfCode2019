@@ -4,14 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    class Day2
+    class Day02
     {
 
         public static IEnumerable<int> ReadFile() =>
-            File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day2.txt")
+            File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day02.txt")
                 .Split(',')
                 .Select(s=>int.Parse(s.Trim()));
 

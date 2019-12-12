@@ -4,12 +4,13 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using AdventOfCode2019;
+using AdventOfCode2019.VM;
 using FluentAssertions;
 using Xunit;
 
 namespace AdventOfCodeTest2019Test
 {
-    public class Day9Test
+    public class Day09Test
     {
         [Fact]
         public void EchoTest()

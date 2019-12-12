@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    public class Day4
+    public class Day04
     {
         public static int GetAnswer1() => 
             GetAllBetween(183564, 657474)

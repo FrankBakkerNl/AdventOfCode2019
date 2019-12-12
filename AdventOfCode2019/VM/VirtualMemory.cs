@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace AdventOfCode2019
+namespace AdventOfCode2019.VM
 {
     public class VirtualMemory : IEnumerable<BigInteger>
     {

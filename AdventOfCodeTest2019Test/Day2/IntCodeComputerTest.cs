@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using AdventOfCode2019;
+using AdventOfCode2019.VM;
 using FluentAssertions;
 using Xunit;
 

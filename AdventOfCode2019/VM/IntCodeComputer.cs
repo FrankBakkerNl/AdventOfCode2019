@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 
-namespace AdventOfCode2019
+namespace AdventOfCode2019.VM
 {
     public class IntCodeComputer
     {
@@ -50,12 +50,17 @@ namespace AdventOfCode2019
 
         public void Run()
         {
-            while (Process())
+            RunAsync().Wait();
+        }
+
+        public async Task RunAsync()
+        {
+            while (await Process())
             {
             }
         }
 
-        public bool Process()
+        public async Task<bool> Process()
         {
             int instruction = (int)Program[_programCounter] % 100;
             switch (instruction)
@@ -178,36 +183,5 @@ namespace AdventOfCode2019
         int Mode(int arg) => GetDigit((int)Program[_programCounter], arg+1);
 
         int GetDigit(int input, int number) => input / (int) Math.Pow(10, number) % 10;
-
-
-        //public override string ToString()
-        //{
-        //    var start = string.Join(',', Program.Take(_programCounter));
-        //    var rest = string.Join(',', Program.Skip(_programCounter));
-        //    return start + ">>" + rest;
-        //}
-    }
-
-    public class VirtualMemory : IEnumerable<BigInteger>
-    {
-        public VirtualMemory(IEnumerable<int> load) : this(load.Select(i=>(BigInteger)i))
-        {}
-
-        public VirtualMemory(IEnumerable<BigInteger> load)
-        {
-            _store = load.Select((v, i) => (i, v)).ToDictionary(t => (BigInteger)t.i, t => t.v);
-        }
-
-        readonly Dictionary<BigInteger, BigInteger> _store;
-
-        public BigInteger this[BigInteger address]
-        {
-            get => _store.TryGetValue(address, out var res) ? res : 0;
-            set => _store[address] = value;
-        }
-
-        public IEnumerator<BigInteger> GetEnumerator() => _store.OrderBy(kv=>kv.Key).Select(kv=>kv.Value).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
