@@ -17,8 +17,10 @@ namespace AdventOfCodeTest2019Test
         {
             var program = new [] {109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99};
             var computer = new IntCodeComputer(program);
+
+            //computer.Output.AsIEnumerableAsync().Result.Should().BeEquivalentTo(program.Select(i=>(BigInteger)i));
             computer.Run();
-            computer.Output.AsIEnumerableAsync().Result.Should().BeEquivalentTo(program.Select(i=>(BigInteger)i));
+            computer.ReadAvailableOutput().Should().BeEquivalentTo(program.Select(i=>(BigInteger)i));
         }
 
         [Fact]

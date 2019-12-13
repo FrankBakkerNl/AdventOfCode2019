@@ -11,7 +11,7 @@ namespace AdventOfCode2019
 
         public static int GetAnswer1(string input) => GetChecksum(input.Select(c=>int.Parse(c.ToString())).ToArray(), ImageWith*ImageHight);
 
-        public static string GetAnswer2(string input) => Decode(input.Select(c=>int.Parse(c.ToString())).ToArray(), ImageWith, ImageHight);
+        public static string GetAnswer2(string input) => Environment.NewLine +  Decode(input.Select(c=>int.Parse(c.ToString())).ToArray(), ImageWith, ImageHight);
 
         public static int GetChecksum(int[] input, int size)
         {

@@ -8,25 +8,34 @@ using static System.Console;
 
 namespace AdventOfCode2019
 {
+    class TestAttribute : Attribute{ }
+
     class Program
     {
         static void Main(string[] args)
         {
-            var days = Assembly.GetExecutingAssembly().GetTypes().Where(t => Regex.IsMatch(t.Name, "^Day[0-9][0-9]$")).OrderBy(t=>t.Name);
+            var days = Assembly.GetExecutingAssembly().GetTypes().Where(t => Regex.IsMatch(t.Name, "^Day[0-9][0-9]$")).OrderBy(t=>t.Name).ToList();
+
+            var testDays = days.Where(d => d.GetCustomAttribute<TestAttribute>() != null).ToList();
+            if (testDays.Any()) days = testDays;
+
             foreach (var dayClass in days)
             {
                 WriteLine(dayClass.Name);
 
                 var getAnswer1 = dayClass.GetMethod("GetAnswer1");
+
                 if (getAnswer1 != null)
                 {
-                    WriteLine("1: {0}", getAnswer1.Invoke(null, GetInputArgs(getAnswer1)));
+                    var instance = getAnswer1.IsStatic ? null : Activator.CreateInstance(dayClass);
+                    WriteLine("1: {0}", getAnswer1.Invoke(instance, GetInputArgs(getAnswer1)));
                 }
 
                 var getAnswer2 = dayClass.GetMethod("GetAnswer2");
                 if (getAnswer2 != null)
                 {
-                    WriteLine("2: {0}", getAnswer2.Invoke(null, GetInputArgs(getAnswer2)));
+                    var instance = getAnswer2.IsStatic ? null : Activator.CreateInstance(dayClass);
+                    WriteLine("2: {0}", getAnswer2.Invoke(instance, GetInputArgs(getAnswer2)));
                 }
                 WriteLine();
             }

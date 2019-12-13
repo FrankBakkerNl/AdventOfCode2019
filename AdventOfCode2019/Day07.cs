@@ -12,13 +12,9 @@ namespace AdventOfCode2019
 {
     public class Day07
     {
-
-        private static string Input => File.ReadAllText(@"C:\Users\Bakke\source\repos\AdventOfCode2019\AdventOfCode2019\Data\Day07.txt");
-
-
         public static BigInteger GetAnswer1(int[]input) => FindMax(input);
 
-        public static BigInteger GetAnswer2(int[]input) => FindMaxFeedBack(input);
+        public static BigInteger GetAnswer2(int[]input) => FindMaxFeedBack(input); // 9246095
 
 
         public static BigInteger FindMax(int[] program)
@@ -36,18 +32,16 @@ namespace AdventOfCode2019
 
         public static BigInteger GetThrusterSignal(int[] program, IEnumerable<int> phaseSettings)
         {
-            BigInteger lastResult = 0;
+            var lastResult = new BigInteger[]{0};
             foreach (var phaseSetting in phaseSettings)
             {
                 var amp = new IntCodeComputer(program);
-
-                amp.WriteInput(phaseSetting);
-                amp.WriteInput(lastResult);
-                amp.Run();
-                lastResult = amp.ReadOutput();
+                
+                amp.Run(phaseSetting, lastResult[0]);
+                lastResult = amp.ReadAvailableOutput();
             }
 
-            return lastResult;
+            return lastResult.First();
         }
 
 
@@ -69,20 +63,23 @@ namespace AdventOfCode2019
 
             var amps = phaseSettings.Select(_ => new IntCodeComputer(program)).ToList();
 
-            // feedback last output to first input
-            var previousAmp = amps.Last();
+            // feedback each last output to first input
             foreach (var (phaseSetting, amp) in phaseSettings.Zip(amps))
             {
-                previousAmp.PipeTo(amp);
-                await amp.WriteInputAsync(phaseSetting);
-                previousAmp = amp;
+                amp.Run(phaseSetting);
             }
 
-            await amps[0].WriteInputAsync(0);
-            var tasks = amps.Select( a => a.RunAsync()).ToArray();
-            await Task.WhenAll(tasks.ToArray());
+            var lastResult = new BigInteger[]{0};
+            while (!amps.Last().Finished)
+            {
+                foreach (var amp in amps)
+                {
+                    amp.Run(lastResult);
+                    lastResult = amp.ReadAvailableOutput();
+                }
+            }
 
-            return await amps.Last().ReadOutputAsync();
+            return lastResult[0];
         }
     }
 }

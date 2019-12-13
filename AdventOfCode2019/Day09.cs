@@ -10,8 +10,7 @@ namespace AdventOfCode2019
         {
             var program = input.Split(',').Select(BigInteger.Parse);
             var computer = new IntCodeComputer(program);
-            computer.WriteInput(1);
-            computer.Run();
+            computer.Run(1);
             return computer.ReadOutput();
         }
 
@@ -19,8 +18,7 @@ namespace AdventOfCode2019
         {
             var program = input.Split(',').Select(BigInteger.Parse);
             var computer = new IntCodeComputer(program);
-            computer.WriteInput(2);
-            computer.Run();
+            computer.Run(2);
             return computer.ReadOutput();
         }
     }

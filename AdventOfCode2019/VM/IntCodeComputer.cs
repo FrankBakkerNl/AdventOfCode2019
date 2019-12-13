@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2019.VM
 {
@@ -12,62 +10,57 @@ namespace AdventOfCode2019.VM
         private BigInteger _programCounter = 0;
         public VirtualMemory Program;
         private BigInteger _relativeBase = 0;
+        private int _ticks;
 
-        private Channel<BigInteger> _inputChannel = Channel.CreateUnbounded<BigInteger>();
-        private readonly Channel<BigInteger> _outputChannel = Channel.CreateUnbounded<BigInteger>();
+        private readonly Queue<BigInteger> _inputChannel = new Queue<BigInteger>();
+        private readonly Queue<BigInteger> _outputChannel = new Queue<BigInteger>();
 
-        public IntCodeComputer(string program) : this(program.Split(',')
-            .Select(s=>BigInteger.Parse(s.Trim())))
+        public IntCodeComputer(string program) : this(program.Split(',').Select(s=>BigInteger.Parse(s.Trim())))
         {}
 
-        public IntCodeComputer(IEnumerable<int> program)
-        {
-            Program = new VirtualMemory(program.ToArray());
-        }
+        public IntCodeComputer(IEnumerable<int> program)  : this(program.Select(i=>(BigInteger)i))
+        {}
 
         public IntCodeComputer(IEnumerable<BigInteger> program)
         {
             Program = new VirtualMemory(program.ToArray());
         }
 
-        public ValueTask<BigInteger> ReadOutputAsync() => _outputChannel.Reader.ReadAsync();
-
-        public ValueTask WriteInputAsync(BigInteger value) => _inputChannel.Writer.WriteAsync(value);
-
-        public BigInteger ReadOutput() => ReadOutputAsync().AsTask().Result;
-
-        public void WriteInput(BigInteger value) => WriteInputAsync(value).AsTask().Wait();
-
-        public IAsyncEnumerable<BigInteger> Output => _outputChannel.Reader.ReadAllAsync();
-
-        public void PipeTo(IntCodeComputer next)
-        {
-            next._inputChannel = _outputChannel;
-        }
-
-        public void Run(int input)
-        {
-            WriteInput(input);
-            Run();
-        }
-
         public void Run()
-        {
-            if (!RunAsync().IsCompleted)
+        { 
+            while (Process()) 
             {
-                throw new InvalidOperationException($"Program cannot finish, blocked at instruction {_programCounter}:{Program[_programCounter]}");
+              _ticks++;
             }
         }
 
-        public async Task RunAsync()
+        public void Run(params BigInteger[] input)
         {
-            while (await Process())
-            {}
-            _outputChannel.Writer.Complete();
+            foreach (var value in input)
+            {
+                _inputChannel.Enqueue(value);
+            }
+
+            Run();
         }
 
-        public async Task<bool> Process()
+        public BigInteger ReadOutput() => _outputChannel.Dequeue();
+
+        public BigInteger[] ReadAvailableOutput()
         {
+            var result = _outputChannel.ToArray();
+            _outputChannel.Clear();
+            return result;
+        }
+
+        public bool Finished { get; private set; }
+
+        public override string ToString() => $"ip:{_programCounter} op:{Program[_programCounter]} ticks:{_ticks}";
+
+        // done, wait for input, produce output
+        private bool Process()
+        {
+            _ticks++;
             int instruction = (int)Program[_programCounter] % 100;
             switch (instruction)
             {
@@ -78,10 +71,9 @@ namespace AdventOfCode2019.VM
                     Multiply();
                     return true;
                 case 3:
-                    await ReadInput();
-                    return true;
+                    return ReadInput();
                 case 4:
-                    await WriteOutput();
+                    WriteOutput();
                     return true;
                 case 5:
                     JumpIfTrue();
@@ -99,9 +91,10 @@ namespace AdventOfCode2019.VM
                     RelativeBaseOffset();
                     return true;
                 case 99:
+                    Finished = true;
                     return false;
                 default:
-                    throw new InvalidOperationException($"Invalid opcode {instruction} at {_programCounter}");
+                    throw new InvalidOperationException($"Invalid opCode {instruction} at {_programCounter}");
             }
         }
 
@@ -153,16 +146,18 @@ namespace AdventOfCode2019.VM
             _programCounter += 4;
         }
 
-        private async Task ReadInput()
+        private bool ReadInput()
         {
-            var value = await _inputChannel.Reader.ReadAsync();
+            if (!_inputChannel.Any()) return false;
+            var value = _inputChannel.Dequeue();
             Store(value, 1);
             _programCounter += 2;
+            return true;
         }
 
-        private async Task WriteOutput()
+        private void WriteOutput()
         {
-            await _outputChannel.Writer.WriteAsync(GetParam(1));
+            _outputChannel.Enqueue(GetParam(1));
             _programCounter += 2;
         }
 
@@ -190,6 +185,5 @@ namespace AdventOfCode2019.VM
         int Mode(int arg) => GetDigit((int)Program[_programCounter], arg+1);
 
         int GetDigit(int input, int number) => input / (int) Math.Pow(10, number) % 10;
-
     }
 }

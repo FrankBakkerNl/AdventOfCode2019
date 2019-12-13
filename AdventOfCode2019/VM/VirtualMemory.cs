@@ -7,9 +7,6 @@ namespace AdventOfCode2019.VM
 {
     public class VirtualMemory : IEnumerable<BigInteger>
     {
-        public VirtualMemory(IEnumerable<int> load) : this(load.Select(i=>(BigInteger)i))
-        {}
-
         public VirtualMemory(IEnumerable<BigInteger> load)
         {
             _store = load.Select((v, i) => (i, v)).ToDictionary(t => (BigInteger)t.i, t => t.v);
