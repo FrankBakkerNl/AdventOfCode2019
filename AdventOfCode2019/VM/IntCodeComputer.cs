@@ -45,6 +45,7 @@ namespace AdventOfCode2019.VM
         }
 
         public BigInteger ReadOutput() => _outputChannel.Dequeue();
+        public bool IsOutputAvailable => _outputChannel.Any();
 
         public BigInteger[] ReadAvailableOutput()
         {
