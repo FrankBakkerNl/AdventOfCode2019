@@ -5,12 +5,12 @@ namespace AdventOfCode2019
 {
     class Day13
     {
-        public int GetAnswer1_skip(string program)
+        public int GetAnswer1(string program) //348
         {
             var cpu = new IntCodeComputer(program);
             cpu.Run();
             var output = cpu.ReadAvailableOutput();
-            return Enumerable.Range(0, output.Length / 3).Select(i => output[i * 3 + 2]).Count(i => i == 2);
+            return output.Select((v, i) => (v, i)).Count(t => t.i % 3 ==2 && t.v == 2);
         }
 
         public int GetAnswer2(string program)

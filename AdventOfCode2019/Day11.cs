@@ -45,19 +45,15 @@ namespace AdventOfCode2019
         private Dictionary<(int x, int y), int> GetPainting(string input, int initialColor)
         {
             var cpu = new IntCodeComputer(input);
-
             var map = new Dictionary<(int x, int y), int>();
+
             var currentPosition = (0, 0);
             map[currentPosition] = initialColor;
             var currentHeading = Heading.up;
 
+            cpu.Run(initialColor);
             while (!cpu.Finished)
             {
-                 var color = map.TryGetValue(currentPosition, out var value) ? value : 0;
-                 cpu.Run(color);
-
-                if (cpu.Finished) break;
-
                 var newColor = cpu.ReadOutput();
                 var instruction = cpu.ReadOutput();
 
@@ -66,11 +62,12 @@ namespace AdventOfCode2019
                 
                 currentHeading = newHeading;
                 currentPosition = newPosition;
-            }
 
+                var color = map.TryGetValue(currentPosition, out var value) ? value : 0;
+                cpu.Run(color);
+            }
             return map;
         }
-
 
         private (Heading heading, (int, int) position) NewPosition((int x, int y) position, Heading heading, int instruction)
         {

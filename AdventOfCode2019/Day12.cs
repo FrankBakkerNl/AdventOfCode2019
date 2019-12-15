@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using static System.Math;
 
@@ -9,30 +8,72 @@ namespace AdventOfCode2019
     {
         public static int GetAnswer1(string[] input) => GetEnergyAfterSteps(input, 1000);
 
+        public static long GetAnswer2(string[] input) // 353620566035124
+        {
+            var state = Parse(input);
+            var dimensions = Transpose(state);
+
+            // Find the length of the cycle of each dimension (x, y, z) separately
+            var results = dimensions.Select(FindCycleLength).ToArray();
+
+            // Now a full cycle is the first time all cycles meet, the lowest common multiple
+            return Lcm(results[0], Lcm(results[1], results[2]));
+        }
+
         public static int GetEnergyAfterSteps(string[] input, int steps)
         {
             var state = LoadInitialState(input);
             for (var i = 0; i < steps; i++)
             {
-                state = Step(state).ToList();
+                state = Step(state);
             }
             return state.Sum(Energy);
-        }
-
-        public static IList<(Vector p, Vector)> LoadInitialState(string[] input)
-        {
-            var positions = Parse(input);
-            return positions.Select(p => (p, new Vector())).ToList();
         }
 
         public static int Energy((Vector p, Vector v) t) => Energy(t.p) * Energy(t.v);
 
         public static int Energy(Vector v) => Abs(v.x) + Abs(v.y) + Abs(v.z);
 
-        public static IEnumerable<(Vector p, Vector v)> Step(IList<(Vector p, Vector velocity)> state) =>
-            from moon in state
-            let newVelocity = state.Aggregate(moon.velocity, (velocity, other) => velocity.Add(GetForce(moon.p, other.p)))
-            select (moon.p.Add(newVelocity), newVelocity);
+
+        private static int FindCycleLength((int, int)[] startState)
+        {
+            var state = Step(startState);
+            var iteration = 0;
+            while(!state.SequenceEqual(startState))
+            {
+                iteration++;
+                state = Step(state);
+            }
+            return iteration;
+        }
+
+        private static long Gcd(long a, long b) => a % b == 0 ? b : Gcd(b, a % b);
+        private static long Lcm(long a, long b) => a * b / Gcd(a, b);
+
+        public static (Vector p, Vector v)[] Step((Vector p, Vector v)[] allMoons) =>
+            (from moon in allMoons
+                let newVelocity =  allMoons.Aggregate(moon.v, (velocity, other) => velocity.Add(GetForce(moon.p, other.p)))
+                select (moon.p.Add(newVelocity), newVelocity))
+            .ToArray();
+
+        public static (int p, int v)[] Step((int p, int v)[] allMoons) =>
+            (from moon in allMoons
+                let newVelocity = moon.v + allMoons.Sum(other => GetForce(moon.p, other.p))
+                select (moon.p + newVelocity, newVelocity))
+            .ToArray();
+
+        public static (int, int)[][]Transpose(Vector[] input) => new[]
+        {
+            input.Select(i => (i.x,0)).ToArray(),
+            input.Select(i => (i.y,0)).ToArray(),
+            input.Select(i => (i.z,0)).ToArray()
+        };
+
+        public static (Vector p, Vector)[] LoadInitialState(string[] input)
+        {
+            var positions = Parse(input);
+            return positions.Select(p => (p, new Vector())).ToArray();
+        }
 
         public static Vector GetForce(Vector current, Vector other) =>
             new Vector(GetForce(current.x, other.x), 
@@ -42,7 +83,7 @@ namespace AdventOfCode2019
         private static int GetForce(int x, int y ) => x > y ? -1 :
                                                       x < y ?  1 : 0;
 
-        public static IEnumerable<Vector> Parse(string[] input) => input.Select(Parse).ToArray();
+        public static Vector[] Parse(string[] input) => input.Select(Parse).ToArray();
 
         public static Vector Parse(string input)
         {
