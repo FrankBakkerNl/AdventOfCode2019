@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using AdventOfCode2019.Arcade;
 using static System.Console;
 
 namespace AdventOfCode2019
@@ -14,6 +15,9 @@ namespace AdventOfCode2019
     {
         static void Main(string[] args)
         {
+
+            new ConsoleGame().Run();
+
             var days = Assembly.GetExecutingAssembly().GetTypes().Where(t => Regex.IsMatch(t.Name, "^Day[0-9][0-9]$")).OrderBy(t=>t.Name).ToList();
 
             var testDays = days.Where(d => d.GetCustomAttribute<TestAttribute>() != null).ToList();
