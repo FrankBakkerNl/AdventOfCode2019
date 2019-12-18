@@ -7,7 +7,6 @@ namespace AdventOfCode2019
     using LookupTable = IDictionary<string, (long quantity, IEnumerable<(long quantity, string element)> inputs)>;
     using StockStatus = Dictionary<string, long>;
 
-    [Test]
     public class Day14
     {
         public static long GetAnswer1(string input) => GetOreRequiredForFuel(1, CreateLookup(input));

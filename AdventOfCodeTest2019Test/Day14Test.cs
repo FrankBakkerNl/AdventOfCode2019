@@ -34,7 +34,7 @@ namespace AdventOfCodeTest2019Test
 7 A, 1 D => 1 E
 7 A, 1 E => 1 FUEL";
 
-            Day14.GetOreRequiredforFuel(1, Day14.CreateLookup(input)).Should().Be(31);
+            Day14.GetOreRequiredForFuel(1, Day14.CreateLookup(input)).Should().Be(31);
 
         }
 
@@ -59,8 +59,7 @@ namespace AdventOfCodeTest2019Test
 7 XCVML => 6 RJRHP
 5 BHXH, 4 VRPVC => 5 LTCX";
 
-            Day14.GetOreRequiredforFuel(1, Day14.CreateLookup(input)).Should().Be(2210736);
-
+            Day14.GetOreRequiredForFuel(1, Day14.CreateLookup(input)).Should().Be(2210736);
         }
 
         [Fact]
@@ -79,9 +78,9 @@ namespace AdventOfCodeTest2019Test
 1 VJHF, 6 MNCFX => 4 RFSQX
 176 ORE => 6 VJHF";
 
-            Day14.GetOreRequiredforFuel(1, Day14.CreateLookup(input)).Should().Be(180697);
-            Day14.FindFuelproducedFromOre(input, 1_000_000_000_000).Should().Be(5586022);
-            Day14.BinarySearch( Day14.CreateLookup(input), 1_000_000_000_000).Should().Be(5586022);
+            Day14.GetOreRequiredForFuel(1, Day14.CreateLookup(input)).Should().Be(180697);
+//            Day14.FindFuelproducedFromOre(input, 1_000_000_000_000).Should().Be(5586022);
+            Day14.FindFuelForOre( Day14.CreateLookup(input), 1_000_000_000_000).Should().Be(5586022);
         }
     }
 }
