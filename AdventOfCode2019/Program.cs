@@ -15,9 +15,6 @@ namespace AdventOfCode2019
     {
         static void Main(string[] args)
         {
-
-            new ConsoleGame().Run();
-
             var days = Assembly.GetExecutingAssembly().GetTypes().Where(t => Regex.IsMatch(t.Name, "^Day[0-9][0-9]$")).OrderBy(t=>t.Name).ToList();
 
             var testDays = days.Where(d => d.GetCustomAttribute<TestAttribute>() != null).ToList();
