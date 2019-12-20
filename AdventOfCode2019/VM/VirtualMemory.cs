@@ -1,27 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
 namespace AdventOfCode2019.VM
 {
-    public class VirtualMemory : IEnumerable<BigInteger>
+    public class VirtualMemory
     {
         public VirtualMemory(IEnumerable<BigInteger> load)
         {
-            _store = load.Select((v, i) => (i, v)).ToDictionary(t => (BigInteger)t.i, t => t.v);
+            _store = load.Select((v, i) => (i, v)).ToImmutableDictionary(t => (BigInteger)t.i, t => t.v);
         }
 
-        readonly Dictionary<BigInteger, BigInteger> _store;
+        ImmutableDictionary<BigInteger, BigInteger> _store;
 
         public BigInteger this[BigInteger address]
         {
             get => _store.TryGetValue(address, out var res) ? res : 0;
-            set => _store[address] = value;
+            set => _store = _store.SetItem(address, value);
         }
 
-        public IEnumerator<BigInteger> GetEnumerator() => _store.OrderBy(kv=>kv.Key).Select(kv=>kv.Value).GetEnumerator();
+        private VirtualMemory()
+        {}
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public VirtualMemory Clone ()
+        {
+            var clone = new VirtualMemory();
+            clone._store = _store;
+            return clone;
+        }
     }
 }

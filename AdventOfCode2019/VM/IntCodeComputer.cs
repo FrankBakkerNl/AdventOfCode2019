@@ -26,6 +26,21 @@ namespace AdventOfCode2019.VM
             Program = new VirtualMemory(program.ToArray());
         }
 
+        private IntCodeComputer(IntCodeComputer copyFrom)
+        {
+            _inputChannel = new Queue<BigInteger>(copyFrom._inputChannel);
+            _outputChannel = new Queue<BigInteger>(copyFrom._outputChannel);
+            _programCounter = copyFrom._programCounter;
+            _relativeBase = copyFrom._relativeBase;
+            _ticks = copyFrom._ticks;
+            Program = copyFrom.Program.Clone();
+        }
+
+        public IntCodeComputer CloneState()
+        {
+            return new IntCodeComputer(this);
+        }
+
         public void Run()
         { 
             while (Process()) 
@@ -61,7 +76,6 @@ namespace AdventOfCode2019.VM
         // done, wait for input, produce output
         private bool Process()
         {
-            _ticks++;
             int instruction = (int)Program[_programCounter] % 100;
             switch (instruction)
             {
