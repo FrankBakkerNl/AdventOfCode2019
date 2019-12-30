@@ -30,5 +30,7 @@ namespace AdventOfCode2019.VM
             clone._store = _store;
             return clone;
         }
+
+        public BigInteger[] Dump => Enumerable.Range(0, (int) _store.Keys.Max()+1).Select(a => _store[a]).ToArray();
     }
 }
