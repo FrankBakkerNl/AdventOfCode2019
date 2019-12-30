@@ -55,7 +55,7 @@ namespace AdventOfCode2019
 
         public static long GetOreRequiredForFuel(long fuelCount, LookupTable formulas)
         {
-            var leftOvers = formulas.Keys.ToDictionary(k => k, k => 0l);
+            var leftOvers = formulas.Keys.ToDictionary(k => k, k => 0L);
             leftOvers["ORE"] = 0;
             return GetOreRequiredFor(fuelCount, "FUEL", leftOvers, formulas);
         }

@@ -85,7 +85,7 @@ namespace AdventOfCodeTest2019Test.Day2
         }
 
         [Fact]
-        public async void DoneAfterInputTest()
+        public void DoneAfterInputTest()
         {
             var program = "1,255, 255, 300, 3, 1000, 3, 1001, 99";;
             var computer = new IntCodeComputer(program);

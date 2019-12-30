@@ -44,10 +44,8 @@ namespace AdventOfCode2019
             return lastResult.First();
         }
 
-
-
         public static BigInteger FindMaxFeedBack(int[] program) 
-            => InputCombinationsFeedback(5).Max(c => GetThrusterSignalFeedback(program, c).Result);
+            => InputCombinationsFeedback(5).Max(c => GetThrusterSignalFeedback(program, c));
 
         static readonly int[] PossibleInputsFeedback = Enumerable.Range(5, 5).ToArray();
 
@@ -57,7 +55,7 @@ namespace AdventOfCode2019
             return InputCombinationsFeedback(number - 1).SelectMany(v1 => PossibleInputsFeedback.Except(v1).Select(v1.Add));
         }
 
-        public static async Task<BigInteger> GetThrusterSignalFeedback(int[] program, IEnumerable<int> phaseSettings)
+        public static BigInteger GetThrusterSignalFeedback(int[] program, IEnumerable<int> phaseSettings)
         {
             phaseSettings = phaseSettings.ToArray();
 

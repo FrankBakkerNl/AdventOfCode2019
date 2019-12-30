@@ -32,15 +32,17 @@ namespace AdventOfCode2019
 
          public static (Operation, long) ParseInstruction(string line)
          {
-             if (line == "deal into new stack")
-                 return (Operation.DealIntoNewStack, 0);
-             var match = Regex.Match(line, "(?<i>[a-z ]*) (?<n>-?[0-9]+)");
+             var match = Regex.Match(line, "(?<i>[a-z ]*[a-z]) ?(?<n>-?[0-9]+)?");
+
              var instruction = match.Groups["i"].Value switch
              {
+                 "deal into new stack" => Operation.DealIntoNewStack,
                  "deal with increment" => Operation.DealWithIncrement,
                  "cut" => Operation.Cut
              };
-             return (instruction, long.Parse(match.Groups["n"].Value));
+
+             var param = match.Groups["n"].Success ? long.Parse(match.Groups["n"].Value) : 0;
+             return (instruction, param);
          }
 
          /// <summary>
