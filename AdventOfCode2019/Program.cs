@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using AdventOfCode2019.Arcade;
@@ -24,21 +26,25 @@ namespace AdventOfCode2019
             {
                 WriteLine(dayClass.Name);
 
-                var getAnswer1 = dayClass.GetMethod("GetAnswer1");
+                GetAnswer(dayClass, 1);
+                GetAnswer(dayClass, 2);
 
-                if (getAnswer1 != null)
-                {
-                    var instance = getAnswer1.IsStatic ? null : Activator.CreateInstance(dayClass);
-                    WriteLine("1: {0}", getAnswer1.Invoke(instance, GetInputArgs(getAnswer1)));
-                }
-
-                var getAnswer2 = dayClass.GetMethod("GetAnswer2");
-                if (getAnswer2 != null)
-                {
-                    var instance = getAnswer2.IsStatic ? null : Activator.CreateInstance(dayClass);
-                    WriteLine("2: {0}", getAnswer2.Invoke(instance, GetInputArgs(getAnswer2)));
-                }
                 WriteLine();
+            }
+        }
+
+        private static void GetAnswer(Type dayClass, int part)
+        {
+            var methodInfo = dayClass.GetMethod("GetAnswer"+part);
+
+            if (methodInfo != null)
+            {
+                var instance = methodInfo.IsStatic ? null : Activator.CreateInstance(dayClass);
+                var input = GetInputArgs(methodInfo);
+                var sw = Stopwatch.StartNew();
+                Write($"part {part}: " );
+                WriteLine(methodInfo.Invoke(instance, input));
+                WriteLine(sw.Elapsed);
             }
         }
 

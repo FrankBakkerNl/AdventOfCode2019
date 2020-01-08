@@ -38,7 +38,7 @@ namespace AdventOfCode2019
              {
                  "deal into new stack" => Operation.DealIntoNewStack,
                  "deal with increment" => Operation.DealWithIncrement,
-                 "cut" => Operation.Cut
+                 "cut" => Operation.Cut,
              };
 
              var param = match.Groups["n"].Success ? long.Parse(match.Groups["n"].Value) : 0;
@@ -63,7 +63,7 @@ namespace AdventOfCode2019
 
          /// <summary>
          /// Combines the A and B components of two y=ax+b functions into the A and B one new combined function
-         /// Such that the resulting function will be F2(F1))
+         /// Such that the resulting function will be F2(F1(X)))
          /// </summary>
          public static (BigInteger a, BigInteger b) MergeFactors((BigInteger a, BigInteger b) f1, (BigInteger a, BigInteger b) f2) =>
              (a: f2.a * f1.a, 
