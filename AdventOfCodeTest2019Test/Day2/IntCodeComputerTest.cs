@@ -97,7 +97,10 @@ namespace AdventOfCodeTest2019Test.Day2
         {
             var computer = new IntCodeComputer(program );
             computer.Run();
-            return string.Join(",", computer.Program.Dump.Select(s=>s.ToString(CultureInfo.InvariantCulture)));
+            var dump = computer.Program.Dump;
+            // remove trailing 0's'
+            dump = dump.Reverse().SkipWhile(v => v == 0).Reverse().ToArray();
+            return string.Join(",", dump.Select(s=>s.ToString(CultureInfo.InvariantCulture)));
         }
 
         private static BigInteger RunIO(string program, int input)

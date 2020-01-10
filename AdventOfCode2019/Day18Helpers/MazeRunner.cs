@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AdventOfCode2019.Day18Helpers
 {
-    public struct MazeRunner
+    public readonly struct MazeRunner
     {
         private readonly L2Maze _maze;
         public int Position { get; }

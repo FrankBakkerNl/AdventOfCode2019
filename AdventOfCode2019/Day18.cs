@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using AdventOfCode2019.Day18Helpers;
 
 namespace AdventOfCode2019
 {
-    [Test]
-    public partial class Day18
+    public class Day18
     {
         public static int GetAnswer1(string[] input) => FindAllKeys(input); // 5450
         public static int GetAnswer2(string[] input) => FindAllKeysMultiMaze(input); // 2020
@@ -56,7 +54,7 @@ namespace AdventOfCode2019
             var tracks = new Heap<MultiMazeRunner>();
             tracks.Add(startTrack, startTrack.MoveCount);
             var visited = new HashSet<MultiMazeRunner>();
-
+            
             while (tracks.Any()) 
             {
                 var track = tracks.Pop();

@@ -63,12 +63,16 @@ namespace AdventOfCode2019
                 File.WriteAllText(filename, "");
             }
 
+
             if (param.ParameterType == typeof(string)) return new object [] {File.ReadAllText(filename)};
 
             if (param.ParameterType == typeof(string[])) return new object [] {File.ReadAllLines(filename)};
 
             if (param.ParameterType== typeof(int[]))
                 return new object[] {File.ReadAllText(filename).Split(",").Select(int.Parse).ToArray()};
+
+            if (param.ParameterType== typeof(long[]))
+                return new object[] {File.ReadAllText(filename).Split(",").Select(long.Parse).ToArray()};
 
             throw new InvalidOperationException($"Unable to map input data for {method.DeclaringType.Name}.{method.Name}");
         }

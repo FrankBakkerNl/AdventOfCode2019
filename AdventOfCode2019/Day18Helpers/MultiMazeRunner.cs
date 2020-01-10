@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using AdventOfCode2019.Day18Helpers;
 
-namespace AdventOfCode2019
+namespace AdventOfCode2019.Day18Helpers
 {
-    public struct MultiMazeRunner
+    public readonly struct MultiMazeRunner
     {
         private const int BitsPerAgent = 6;
         private const uint BitMask = 0b111111;

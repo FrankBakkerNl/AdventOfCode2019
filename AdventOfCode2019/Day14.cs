@@ -35,6 +35,7 @@ namespace AdventOfCode2019
             }
         }
 
+
         private static long BinarySearch(Func<long, long> produce, long targetValue, long lowerBound, long upperBound)
         {
             while (upperBound - lowerBound > 1 )

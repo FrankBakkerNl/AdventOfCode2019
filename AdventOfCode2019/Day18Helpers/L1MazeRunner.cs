@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace AdventOfCode2019.Day18Helpers
 {
-    public struct L1MazeRunner
+    public readonly struct L1MazeRunner
     {
         private readonly L1Maze _maze;
         public (int x, int y) Position { get; }
-        private int? _lastMove;
+        private readonly int? _lastMove;
         public int MoveCount { get; }
 
         public int EqualsKey => Position.x * 100 + Position.y;
