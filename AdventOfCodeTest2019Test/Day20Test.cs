@@ -94,7 +94,9 @@ namespace AdventOfCodeTest2019Test
             maze.PortalMap.Count.Should().Be(6);
             maze.Start.Should().Be((9, 2));
             maze.End.Should().Be((13, 16));
-            maze.PortalMap[(9, 7)].Should().Be((2,8));
+            maze.PortalMap[(9, 7)].Destination.Should().Be((2,8));
+            maze.PortalMap[(9, 7)].levelDelta.Should().Be(1);
+            maze.PortalMap[(2, 8)].levelDelta.Should().Be(-1);
         }
 
 
@@ -104,7 +106,7 @@ namespace AdventOfCodeTest2019Test
             var maze = new Day20.L1Maze(TestMaze2);
             maze.PortalMap.Count.Should().Be(20);
             maze.Start.Should().Be((19, 2));
-            maze.End.Should().Be((1, 17));
+            maze.End.Should().Be((2, 17));
         }
 
         [Fact]
