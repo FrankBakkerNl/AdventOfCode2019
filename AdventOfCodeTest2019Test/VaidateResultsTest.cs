@@ -51,7 +51,7 @@ XXX   XX  X    XXXX XXX  ");
             AddTest<Day20>(626, 6912);
 //            AddTest<Day21>(null, null);
             AddTest<Day22>((BigInteger)4485, (BigInteger)91967327971097);
-            AddTest<Day23>(24555, null);
+            AddTest<Day23>(24555, 19463);
             AddTest<Day24>(18400817, 1944);
             AddTest<Day25>(352325632);
 
