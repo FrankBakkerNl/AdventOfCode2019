@@ -5,6 +5,20 @@ using System.Numerics;
 
 namespace AdventOfCode2019.VM
 {
+    enum OpCode
+    {
+        Add=1,
+        Multiply=2,
+        Input=3,
+        Output = 4,
+        JumpIfTrue = 5,
+        JumpIfFalse = 6,
+        LessThan = 7,
+        Equals = 8,
+        RelativeBaseOffset = 9,
+        Stop = 99
+    }
+
     public class IntCodeComputer
     {
         private BigInteger _programCounter = 0;
@@ -15,11 +29,9 @@ namespace AdventOfCode2019.VM
         private readonly Queue<BigInteger> _inputChannel = new Queue<BigInteger>();
         private readonly Queue<BigInteger> _outputChannel = new Queue<BigInteger>();
 
-        public IntCodeComputer(string program) : this(program.Split(',').Select(s=>BigInteger.Parse(s.Trim())))
-        {}
+        public IntCodeComputer(string program) : this(program.Split(',').Select(s=>BigInteger.Parse(s.Trim()))) {}
 
-        public IntCodeComputer(IEnumerable<int> program)  : this(program.Select(i=>(BigInteger)i))
-        {}
+        public IntCodeComputer(IEnumerable<int> program)  : this(program.Select(i=>(BigInteger)i)) {}
 
         public IntCodeComputer(IEnumerable<BigInteger> program)
         {
@@ -73,44 +85,51 @@ namespace AdventOfCode2019.VM
 
         public override string ToString() => $"ip:{_programCounter} op:{Program[_programCounter]} ticks:{_ticks}";
 
-        // done, wait for input, produce output
         private bool Process()
         {
-            int instruction = (int)Program[_programCounter] % 100;
-            switch (instruction)
+            var instruction = (OpCode)(int)(Program[_programCounter] % 100);
+
+            return instruction switch
             {
-                case 1:
-                    Add();
-                    return true;
-                case 2:
-                    Multiply();
-                    return true;
-                case 3:
-                    return ReadInput();
-                case 4:
-                    WriteOutput();
-                    return true;
-                case 5:
-                    JumpIfTrue();
-                    return true;
-                case 6:
-                    JumpIfFalse();
-                    return true;
-                case 7:
-                    LessThan();
-                    return true;
-                case 8:
-                    Equals();
-                    return true;
-                case 9:
-                    RelativeBaseOffset();
-                    return true;
-                case 99:
-                    Finished = true;
-                    return false;
-                default:
-                    throw new InvalidOperationException($"Invalid opCode {instruction} at {_programCounter}");
-            }
+                OpCode.Add => Execute((x,y) => x + y),
+                OpCode.Multiply => Execute((x,y) => x * y),
+                OpCode.Input => ReadInput(),
+                OpCode.Output => Execute(WriteOutput),
+                OpCode.JumpIfTrue => Execute(JumpIfTrue),
+                OpCode.JumpIfFalse => Execute(JumpIfFalse),
+                OpCode.LessThan => Execute((x,y)=> x < y ? 1 : 0),
+                OpCode.Equals => Execute((x,y)=> x == y ? 1 : 0),
+                OpCode.RelativeBaseOffset => Execute(RelativeBaseOffset),
+                OpCode.Stop => Stop(),
+                _ => throw new InvalidOperationException($"Invalid opCode {instruction} at {_programCounter}"),
+            };
+        }
+
+        private bool Execute(Action action)
+        {
+            action();
+            return true;
+        }
+
+        private bool Execute(Func<BigInteger, BigInteger, BigInteger> action)
+        {
+            Store(action(GetParam(1), GetParam(2)), 3);
+            _programCounter += 4;
+            return true;
+        }
+
+
+        private bool Execute(Func<BigInteger, BigInteger> action)
+        {
+            Store(action(GetParam(1)), 3);
+            _programCounter += 3;
+            return true;
+        }
+
+        private bool Stop()
+        {
+            Finished = true;
+            return false;
         }
 
         private void JumpIfTrue()
@@ -125,18 +144,6 @@ namespace AdventOfCode2019.VM
             }
         }
 
-        private void LessThan()
-        {
-            Store(GetParam(1) < GetParam(2) ? 1 : 0, 3);
-            _programCounter += 4;
-        }
-
-        private void Equals()
-        {
-            Store(GetParam(1) == GetParam(2) ? 1 : 0, 3);
-            _programCounter += 4;
-        }
-
         private void JumpIfFalse()
         {
             if (GetParam(1) == 0)
@@ -147,18 +154,6 @@ namespace AdventOfCode2019.VM
             {
                 _programCounter += 3;
             }
-        }
-
-        private void Add()
-        {
-            Store(GetParam(1) + GetParam(2), 3);
-            _programCounter += 4;
-        }
-
-        private void Multiply()
-        {
-            Store(GetParam(1) * GetParam(2), 3);
-            _programCounter += 4;
         }
 
         private bool ReadInput()
