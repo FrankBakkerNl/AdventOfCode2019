@@ -37,13 +37,13 @@ namespace AdventOfCode2019
 
         private static int FindCycleLength((int, int)[] startState)
         {
-            var state = Step(startState);
+            var state = startState;
             var iteration = 0;
-            while(!state.SequenceEqual(startState))
+            do
             {
                 iteration++;
                 state = Step(state);
-            }
+            } while (!state.SequenceEqual(startState));
             return iteration;
         }
 

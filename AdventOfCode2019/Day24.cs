@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    [Test]
     public class Day24
     {
         public static int GetAnswer1(string[] input) => 

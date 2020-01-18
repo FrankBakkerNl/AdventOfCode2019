@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    class Day08
+    public class Day08
     {
         private static int ImageWith = 25;
         private static int ImageHight = 6;

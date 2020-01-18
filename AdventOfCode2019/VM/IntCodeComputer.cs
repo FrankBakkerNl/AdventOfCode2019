@@ -32,6 +32,7 @@ namespace AdventOfCode2019.VM
         public IntCodeComputer(string program) : this(program.Split(',').Select(s=>BigInteger.Parse(s.Trim()))) {}
 
         public IntCodeComputer(IEnumerable<int> program)  : this(program.Select(i=>(BigInteger)i)) {}
+        public IntCodeComputer(IEnumerable<long> program)  : this(program.Select(i=>(BigInteger)i)) {}
 
         public IntCodeComputer(IEnumerable<BigInteger> program)
         {

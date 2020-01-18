@@ -3,7 +3,7 @@ using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    class Day13
+    public class Day13
     {
         public int GetAnswer1(string program) //348
         {
