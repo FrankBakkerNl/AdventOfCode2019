@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AdventOfCode2019
 {
-    class Day03
+    public class Day03
     {
         public static int GetAnswer1(string[] lines) => FindFirstIntersection(lines[0], lines[1]);
 

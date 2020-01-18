@@ -5,7 +5,7 @@ using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    class Day02
+    public class Day02
     {
         public static BigInteger GetAnswer1(int[] data)
         {
