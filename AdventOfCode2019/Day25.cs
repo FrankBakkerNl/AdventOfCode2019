@@ -9,6 +9,7 @@ namespace AdventOfCode2019
 {
     public class Day25
     {
+        [Result(352325632)]
         public int GetAnswer1(long[] program)
         {
             var cpu = new IntCodeComputer(program.Select(i => (BigInteger) i));

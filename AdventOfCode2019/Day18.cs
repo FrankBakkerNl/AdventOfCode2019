@@ -6,7 +6,10 @@ namespace AdventOfCode2019
 {
     public class Day18
     {
+        [Result(5450)]
         public static int GetAnswer1(string[] input) => FindAllKeys(input); // 5450
+
+        [Result(2020)]
         public static int GetAnswer2(string[] input) => FindAllKeysMultiMaze(input); // 2020
 
         public static int FindAllKeys(string[] input)

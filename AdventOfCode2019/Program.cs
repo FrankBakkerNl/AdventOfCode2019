@@ -13,7 +13,7 @@ namespace AdventOfCode2019
 {
     class TestAttribute : Attribute{ }
 
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {

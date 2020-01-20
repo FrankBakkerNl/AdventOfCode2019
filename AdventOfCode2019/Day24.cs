@@ -6,10 +6,12 @@ namespace AdventOfCode2019
 {
     public class Day24
     {
+        [Result(18400817)]
         public static int GetAnswer1(string[] input) => 
             FindFirstRepeat(new Field(input)).Bits;
 
 
+        [Result(1944)]
         public static int GetAnswer2(string[] input) =>
             GetCountAfterGenerations(new Field(input), 200); // 1944
 

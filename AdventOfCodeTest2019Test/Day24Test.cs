@@ -85,7 +85,7 @@ namespace AdventOfCodeTest2019Test
         public void FindLevels()
         {
             var result = Day24.FindLevels(new Field(TestInput), 10);
-            result.Length.Should().Be(11);
+            result.Length.Should().Be(21);
         }
 
         [Fact]

@@ -9,6 +9,7 @@ namespace AdventOfCode2019
 {
     public class Day17
     {
+        [Result(3192)]
         public static int GetAnswer1(string input)
         {
             var map = GetMap(new IntCodeComputer(input));
@@ -62,7 +63,8 @@ namespace AdventOfCode2019
             return (scaffolds, startPos, heading);
         }
 
-        public static BigInteger GetAnswer2(string input)
+        [Result(684691)]
+        public static long GetAnswer2(string input)
         {
             var (scaffolds, startPos, heading) = GetMap(new IntCodeComputer(input));
             var fullPath = FindPath(scaffolds, startPos, heading);
@@ -75,7 +77,7 @@ namespace AdventOfCode2019
                 InputLine(cpu, line);
             }
             InputLine(cpu, "n");
-            return cpu.ReadAvailableOutput().Last();
+            return (long)cpu.ReadAvailableOutput().Last();
         }
 
         private static string FindPath(HashSet<(int, int)> scaffolds, (int, int) start, int heading)

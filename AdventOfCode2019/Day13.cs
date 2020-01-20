@@ -5,6 +5,7 @@ namespace AdventOfCode2019
 {
     public class Day13
     {
+        [Result(348)]
         public int GetAnswer1(string program) //348
         {
             var cpu = new IntCodeComputer(program);
@@ -13,6 +14,7 @@ namespace AdventOfCode2019
             return output.Select((v, i) => (v, i)).Count(t => t.i % 3 ==2 && t.v == 2);
         }
 
+        [Result(16999)]
         public int GetAnswer2(string program)
         {
             var cpu = new IntCodeComputer(program);

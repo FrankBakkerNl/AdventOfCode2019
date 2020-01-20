@@ -7,8 +7,10 @@ namespace AdventOfCode2019
 {
     public class Day03
     {
+        [Result(721)]
         public static int GetAnswer1(string[] lines) => FindFirstIntersection(lines[0], lines[1]);
 
+        [Result(7388)]
         public static int GetAnswer2(string[] lines) => FindClosestIntersection(lines[0], lines[1]);
 
         public static int FindFirstIntersection(string firstWire, string secondWire)

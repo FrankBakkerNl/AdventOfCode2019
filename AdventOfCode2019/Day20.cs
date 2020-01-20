@@ -7,8 +7,10 @@ namespace AdventOfCode2019
 {
     public partial class Day20
     {
+        [Result(626)]
         public static int GetAnswer1(string[] input) => FindShortestRoute(input); // 626
 
+        [Result(6912)]
         public static int GetAnswer2(string[] input) => FindShortestRouteMultiLevel(input); // 6912
 
         public static void RenderMaze(string[] input)

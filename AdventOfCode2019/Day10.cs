@@ -8,8 +8,10 @@ namespace AdventOfCode2019
 {
     public class Day10
     {
+        [Result(276)]
         public static int GetAnswer1(string input) => FindMaxVisible(input);
 
+        [Result(1321)]
         public static int GetAnswer2(string input)
         {
             var (x, y) = GetVaporizeOrder(input).ElementAt(199);

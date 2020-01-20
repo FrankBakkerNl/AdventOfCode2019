@@ -7,15 +7,15 @@ namespace AdventOfCode2019
 {
     public class Day22
     {
-        public static BigInteger GetAnswer1(string[] instructions) => FindNewPosition(instructions, 10007, 2019); 
-        // 4485
+        [Result(4485)]
+        public static long GetAnswer1(string[] instructions) => (long)FindNewPosition(instructions, 10007, 2019); 
 
         public static BigInteger FullDeckSize = 119_315_717_514_047;
         public static BigInteger LoopCount = 101_741_582_076_661;
 
-        public static BigInteger GetAnswer2(string[] instructions) 
-            => FindOriginalPosition(instructions, FullDeckSize, 2020, LoopCount);
-        // 91967327971097
+        [Result(91967327971097)]
+        public static long GetAnswer2(string[] instructions) 
+            => (long)FindOriginalPosition(instructions, FullDeckSize, 2020, LoopCount);
 
         private static readonly (BigInteger a, BigInteger b) NoOpShuffle = (1, 0);
 

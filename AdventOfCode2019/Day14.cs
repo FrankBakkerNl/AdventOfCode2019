@@ -9,7 +9,9 @@ namespace AdventOfCode2019
 
     public class Day14
     {
+        [Result(899155)]
         public static long GetAnswer1(string input) => GetOreRequiredForFuel(1, CreateLookup(input));
+        [Result(2390226)]
         public static long GetAnswer2(string input) => FindFuelForOre (CreateLookup(input), 1_000_000_000_000);
 
         public static long FindFuelForOre(LookupTable formulas, long oreStock)

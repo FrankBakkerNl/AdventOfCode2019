@@ -7,6 +7,7 @@ namespace AdventOfCode2019
 {
     public class Day19
     {
+        [Result(116)]
         public int GetAnswer1(string input)
         {
             bool IsAffected(int x, int y)
@@ -19,7 +20,8 @@ namespace AdventOfCode2019
             return Range(0, 50).SelectMany(i => Range(0, 50).Select(j => (i, j))).Count(s => IsAffected(s.i, s.j));
         }
 
-        public int GetAnswer2(int[] input) // 10311666
+        [Result(10311666)]
+        public int GetAnswer2(int[] input)
         { 
             var analyser = new BeamAnalyzer(input);
 

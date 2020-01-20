@@ -8,8 +8,10 @@ namespace AdventOfCode2019
     public class Day15
     {
         public static int[] Moves = { 1, 2, 3, 4 };
+
         public enum Result { Wall = 0, Ok = 1, OxygenTank = 2 }
 
+        [Result(330)]
         public static long GetAnswer1(int[] program) // 330
         {
             var cpu = new IntCodeComputer(program);
@@ -40,7 +42,7 @@ namespace AdventOfCode2019
 
         private static int Reverse(int move) => new[] { 0, 2, 1, 4, 3 }[move];
 
-
+        [Result(352)]
         public static int GetAnswer2(int[] program)
         {
             var cpu = new IntCodeComputer(program);

@@ -8,8 +8,10 @@ namespace AdventOfCode2019
 {
     public class Day06
     {
+        [Result(151345)]
         public static int GetAnswer1(string input) => GetTotalOrbits(input);
 
+        [Result(391)]
         public static int GetAnswer2(string input) => GetOrbitTransfers(input, "YOU", "SAN");
 
         public static int GetTotalOrbits(string input)

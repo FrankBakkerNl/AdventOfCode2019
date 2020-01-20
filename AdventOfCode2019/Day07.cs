@@ -12,9 +12,11 @@ namespace AdventOfCode2019
 {
     public class Day07
     {
-        public static BigInteger GetAnswer1(int[]input) => FindMax(input);
+        [Result(298586)]
+        public static long GetAnswer1(int[]input) => (long)FindMax(input);
 
-        public static BigInteger GetAnswer2(int[]input) => FindMaxFeedBack(input); // 9246095
+        [Result(9246095)]
+        public static long GetAnswer2(int[]input) => (long)FindMaxFeedBack(input); // 9246095
 
 
         public static BigInteger FindMax(int[] program)

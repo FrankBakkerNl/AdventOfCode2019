@@ -96,7 +96,7 @@ namespace AdventOfCodeTest2019Test
             maze.End.Should().Be((13, 16));
             maze.PortalMap[(9, 7)].Destination.Should().Be((2,8));
             maze.PortalMap[(9, 7)].levelDelta.Should().Be(1);
-            maze.PortalMap[(2, 8)].levelDelta.Should().Be(-1);
+            maze.PortalMap[(1, 8)].levelDelta.Should().Be(-1);
         }
 
 

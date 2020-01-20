@@ -9,11 +9,13 @@ namespace AdventOfCode2019
     public class Day01
     {
 
+        [Result(3287620)]
         public static int GetAnswer1(string input)
         {
             return input.Split(Environment.NewLine).Select(int.Parse).Select(Fuel).Sum();
         }
 
+        [Result(4928567)]
         public static int GetAnswer2(string input)
         {
             return input.Split(Environment.NewLine).Select(int.Parse).Select(CumelativeFuel).Sum();

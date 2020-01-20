@@ -7,16 +7,18 @@ namespace AdventOfCode2019
 {
     public class Day02
     {
-        public static BigInteger GetAnswer1(int[] data)
+        [Result(2890696)]
+        public static long GetAnswer1(int[] data)
         {
             data[1] = 12;
             data[2] = 2;
 
             var computer = new IntCodeComputer(data);
             computer.Run();
-            return computer.Program[0];
+            return (long)computer.Program[0];
         }
 
+        [Result(8226)]
         public static int GetAnswer2(int[] data)
         {
             int target = 19690720;

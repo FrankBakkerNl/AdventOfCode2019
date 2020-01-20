@@ -6,8 +6,10 @@ namespace AdventOfCode2019
 {
     public class Day12
     {
+        [Result(9127)]
         public static int GetAnswer1(string[] input) => GetEnergyAfterSteps(input, 1000);
 
+        [Result(353620566035124)]
         public static long GetAnswer2(string[] input) // 353620566035124
         {
             var state = Parse(input);

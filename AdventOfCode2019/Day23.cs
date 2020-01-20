@@ -10,6 +10,7 @@ namespace AdventOfCode2019
     [Test]
     public class Day23
     {
+        [Result(24555)]
         public long GetAnswer1(long[] input)
         {
             var cpus = new IntCodeComputer[50];
@@ -40,7 +41,7 @@ namespace AdventOfCode2019
             }
         }
 
-
+        [Result(19463)]
         public long GetAnswer2(long[] input)
         {
             var cpus = new IntCodeComputer[50];

@@ -13,9 +13,17 @@ namespace AdventOfCode2019
     {
         enum Heading {up, right, down, left};
 
-        // 1964
+        [Result(1964)]
         public int GetAnswer1(string input) => GetPainting(input, 0).Count;
 
+        [Result(@"
+ #### #  # #### #  #  ##  #### ###  #  #   
+ #    # #  #    # #  #  # #    #  # # #    
+ ###  ##   ###  ##   #    ###  #  # ##     
+ #    # #  #    # #  #    #    ###  # #    
+ #    # #  #    # #  #  # #    # #  # #    
+ #    #  # #### #  #  ##  #    #  # #  #   
+")]//"FKEKCFRK"
         public string GetAnswer2(string input)
         {
             var map = GetPainting(input, 1);

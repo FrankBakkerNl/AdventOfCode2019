@@ -6,11 +6,13 @@ namespace AdventOfCode2019
 {
     public class Day04
     {
+        [Result(1610)]
         public static int GetAnswer1() => 
             GetAllBetween(183564, 657474)
             .Where(HasRepeatingDigit)
             .Count();
 
+        [Result(1104)]
         public static int GetAnswer2() => 
             GetAllBetween(183564, 657474)
                 .Where(HasDoubleDigit)

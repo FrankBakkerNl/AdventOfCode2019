@@ -9,8 +9,16 @@ namespace AdventOfCode2019
         private static int ImageWith = 25;
         private static int ImageHight = 6;
 
+        [Result(2413)]
         public static int GetAnswer1(string input) => GetChecksum(input.Select(c=>int.Parse(c.ToString())).ToArray(), ImageWith*ImageHight);
 
+        [Result(@"
+XXX   XX  XXX  XXXX XXX  
+X  X X  X X  X    X X  X 
+XXX  X    X  X   X  XXX  
+X  X X    XXX   X   X  X 
+X  X X  X X    X    X  X 
+XXX   XX  X    XXXX XXX  ")]
         public static string GetAnswer2(string input) => Environment.NewLine +  Decode(input.Select(c=>int.Parse(c.ToString())).ToArray(), ImageWith, ImageHight);
 
         public static int GetChecksum(int[] input, int size)
