@@ -7,7 +7,6 @@ using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    [Test]
     public class Day23
     {
         [Result(24555)]
