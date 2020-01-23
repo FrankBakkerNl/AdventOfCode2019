@@ -50,7 +50,7 @@ namespace AdventOfCode2019
                 cpus[i].Run(i);
             }
 
-            var natPacket = (0, 0l, 0l);
+            var natPacket = (0, 0L, 0L);
             var idle = false;
             var lastIdleYValue = (long?)null;
             while (true)

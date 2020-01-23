@@ -11,11 +11,9 @@ namespace AdventOfCodeTest2019Test
     public class Day21Test
     {
         [Fact]
-        public void SimulatorTest()
+        public void WalkScriptTest()
         {
-            var scriptLines = Day21.WalkScript
-                .Split(Environment.NewLine)
-                .Where(l=>!string.IsNullOrEmpty(l) && !l.StartsWith("//")).ToArray();
+            var scriptLines = Day21.WalkScript;
 
             new Day21.Simulator().Jumps(scriptLines, ".###").Should().BeTrue();
             new Day21.Simulator().Jumps(scriptLines, "..##").Should().BeTrue();
@@ -28,5 +26,20 @@ namespace AdventOfCodeTest2019Test
             new Day21.Simulator().Jumps(scriptLines, "####").Should().BeFalse();
 
         }
+        [Theory]
+        [InlineData(".######")]
+
+        public void RunScript_ShouldJump(string pattern)
+        {
+            new Day21.Simulator().Jumps(Day21.RunScript, pattern).Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("##.....")]
+        public void RunScript_ShouldNotJump(string pattern)
+        {
+            new Day21.Simulator().Jumps(Day21.RunScript, pattern).Should().BeFalse();
+        }
+
     }
 }

@@ -92,90 +92,77 @@ namespace AdventOfCode2019.VM
 
             return instruction switch
             {
-                OpCode.Add => Execute((x,y) => x + y),
-                OpCode.Multiply => Execute((x,y) => x * y),
-                OpCode.Input => ReadInput(),
-                OpCode.Output => Execute(WriteOutput),
-                OpCode.JumpIfTrue => Execute(JumpIfTrue),
-                OpCode.JumpIfFalse => Execute(JumpIfFalse),
-                OpCode.LessThan => Execute((x,y)=> x < y ? 1 : 0),
-                OpCode.Equals => Execute((x,y)=> x == y ? 1 : 0),
-                OpCode.RelativeBaseOffset => Execute(RelativeBaseOffset),
-                OpCode.Stop => Stop(),
+                OpCode.Add =>                Execute((x,y) => x + y),
+                OpCode.Multiply =>           Execute((x,y) => x * y),
+                OpCode.Input =>              ReadInput(),
+                OpCode.Output =>             Execute(x=>_outputChannel.Enqueue(x)),
+                OpCode.JumpIfTrue =>         Execute(JumpIfTrue),
+                OpCode.JumpIfFalse =>        Execute(JumpIfFalse),
+                OpCode.LessThan =>           Execute((x,y) => x < y ? 1 : 0),
+                OpCode.Equals =>             Execute((x,y) => x == y ? 1 : 0),
+                OpCode.RelativeBaseOffset => Execute(x => { _relativeBase += x; }),
+                OpCode.Stop =>               Stop(),
                 _ => throw new InvalidOperationException($"Invalid opCode {instruction} at {_programCounter}"),
             };
         }
 
-        private bool Execute(Action action)
+        private bool Execute(Action<BigInteger> action)
         {
-            action();
+            var param = GetParam(1);
+            _programCounter += 2;
+            action(param);
             return true;
         }
 
-        private bool Execute(Func<BigInteger, BigInteger, BigInteger> action)
+        private bool Execute(Action<BigInteger, BigInteger> action)
         {
-            Store(action(GetParam(1), GetParam(2)), 3);
-            _programCounter += 4;
-            return true;
-        }
-
-
-        private bool Execute(Func<BigInteger, BigInteger> action)
-        {
-            Store(action(GetParam(1)), 3);
+            var p1 = GetParam(1);
+            var p2 = GetParam(2);
             _programCounter += 3;
+            action(p1, p2);
             return true;
         }
 
+        private bool Execute(Func<BigInteger, BigInteger, BigInteger> func)
+        {
+            var p1 = GetParam(1);
+            var p2 = GetParam(2);
+            var addrRes = ResolveAddress(3);
+            _programCounter += 4;
+            Program[addrRes] = func(p1, p2);
+            return true;
+        }
+        
         private bool Stop()
         {
             Finished = true;
             return false;
         }
 
-        private void JumpIfTrue()
+        private void JumpIfTrue(BigInteger x, BigInteger y)
         {
-            if (GetParam(1) != 0)
+            if (x != 0)
             {
-                _programCounter = GetParam(2);
-            }
-            else
-            {
-                _programCounter += 3;
+                _programCounter = y;
             }
         }
 
-        private void JumpIfFalse()
+        private void JumpIfFalse(BigInteger x, BigInteger y)
         {
-            if (GetParam(1) == 0)
+            if (x == 0)
             {
-                _programCounter = GetParam(2);
-            }
-            else
-            {
-                _programCounter += 3;
+                _programCounter = y;
             }
         }
 
         private bool ReadInput()
         {
             if (!_inputChannel.Any()) return false;
+
             var value = _inputChannel.Dequeue();
             Store(value, 1);
             _programCounter += 2;
             return true;
-        }
-
-        private void WriteOutput()
-        {
-            _outputChannel.Enqueue(GetParam(1));
-            _programCounter += 2;
-        }
-
-        private void RelativeBaseOffset()
-        {
-            _relativeBase += GetParam(1);
-            _programCounter += 2;
         }
 
         void Store(BigInteger value, int number)

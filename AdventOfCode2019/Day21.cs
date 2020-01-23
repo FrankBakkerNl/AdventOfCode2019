@@ -4,27 +4,31 @@ using AdventOfCode2019.VM;
 
 namespace AdventOfCode2019
 {
-    
-    [Test]
     public class Day21
     {
         [Result(19347868)]
-        public long GetAnswer1(int[] input) => GetHullDamage(input, PreProcessScript(WalkScript));
+        public long GetAnswer1(int[] input) => GetHullDamage(input, WalkScript);
+
+        [Result(1142479667)]
+        public long GetAnswer2(int[] input) => GetHullDamage(input, RunScript);
 
         private static long GetHullDamage(int[] input, string[] script)
         {
-            var asc = new AsciiComputer(new IntCodeComputer(input));
+            var cpu = new IntCodeComputer(input);
+            var asc = new AsciiComputer(cpu);
 
             foreach (var line in script)
             {
-                asc.Run(line.Trim());
+                var r = asc.Run(line.Trim());
+                //Console.Write(r);
             }
 
+            //Console.WriteLine(cpu.ToString());
             return asc.ResultCode;
         }
 
 
-        public const string WalkScript = @"
+        public static string[] WalkScript = PreProcessScript(@"
 NOT A T
 OR T J
 NOT B T
@@ -32,63 +36,73 @@ OR T J
 NOT C T
 OR T J
 AND D J
-WALK";
+WALK");
 
 
-        private static string[] PreProcessScript(string script) =>
-            script.Split(Environment.NewLine)
-                        .Where(l => !string.IsNullOrEmpty(l) && !l.StartsWith("//")).ToArray();
+        public static string[] RunScript = PreProcessScript(@"
+NOT B T
+OR T J -- if B is non ground
+NOT C T
+OR T J -- or C is non ground
+AND D J -- and D is ground
+
+NOT A T
+AND E T
+OR T J
+
+-- only if E or G is ground
+NOT E T
+NOT T T
+OR H T
+AND T J
+
+
+NOT A T
+OR T J -- always if A is non ground
+RUN
+");
+
+        public static string[] PreProcessScript(string script) =>
+            script.Split(Environment.NewLine).Select(NormalizeInstruction)
+                        .Where(l => !string.IsNullOrEmpty(l)).ToArray();
+
+        static string NormalizeInstruction(string instruction)
+        {
+            var commentStart= instruction.IndexOf('-');
+            return (commentStart >= 0 ? instruction.Substring(0, commentStart) : instruction).ToUpper().Trim();
+        }
 
 
         public class Simulator
         {
-
             public bool Jumps(string[] program, string pattern)
             {
-                var fields = pattern.Select(c => c == '#').ToArray();
+                var fields = pattern.PadRight(10, '.').Select(c => c == '#').ToArray();
 
-                var state = (T: false, J: false);
-                foreach (var line in program.TakeWhile(l => l != "WALK"))
-                {
-                    state = ProcessLine(line, state.T, state.J, fields);
-                }
+                var finalState = program.TakeWhile(l => l != "WALK" && l != "RUN")
+                    .Aggregate((T: false, J: false), (state, line) => 
+                        ProcessLine(line, state.T, state.J, fields));
 
-                return state.J;
+                return finalState.J;
             }
 
-            (bool T, bool J) ProcessLine(string line, bool T, bool J, bool[] fields)
+            (bool T, bool J) ProcessLine(string line, bool t, bool j, bool[] fields)
             {
                 var parts = line.Split(' ');
+                var arg1 = parts[1][0];
 
-                bool x = parts[1] switch
+                var val1 = arg1 <= 'I' ? fields[arg1 - 'A'] : arg1 == 'T' ? t : j;
+
+                ref var ref2 = ref parts[2][0] == 'T' ? ref t : ref j;
+
+                ref2 = parts[0] switch
                 {
-                    "A" => fields[0],
-                    "B" => fields[1],
-                    "C" => fields[2],
-                    "D" => fields[3],
-                    "T" => T,
-                    "J" => J
+                    "AND" => val1 && ref2,
+                    "OR"  => val1 || ref2,
+                    "NOT" => !val1,
+                    _ => ref2,
                 };
-                bool y = parts[2] switch { "T" => T, "J" => J };
-
-                var result = parts[0] switch
-                {
-                    "AND" => x && y,
-                    "OR" => x || y,
-                    "NOT" => !x,
-                };
-
-                if (parts[2] == "T")
-                {
-                    T = result;
-                }
-                else
-                {
-                    J = result;
-                }
-
-                return (T, J);
-
+                return (t, j);
             }
         }
     }
