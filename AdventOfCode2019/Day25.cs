@@ -14,9 +14,8 @@ namespace AdventOfCode2019
         {
             var cpu = new IntCodeComputer(program.Select(i => (BigInteger) i));
             var asciiComputer =  new AsciiComputer(cpu);
-            GetAllItemsAndGoToSecurity(asciiComputer);
-            return Force(asciiComputer);
 
+            return WallFollower(asciiComputer);
         }
 
         public void Repl(long[] program)
@@ -38,7 +37,71 @@ namespace AdventOfCode2019
             }
         }
 
-        
+        public int WallFollower(AsciiComputer cpu)
+        {
+            //cpu.EchoInput = true;
+            //cpu.EchoOutput = true;
+            var gameOutput = cpu.Run();
+
+            var facing = Directions.north;
+            bool securityVisited = false;
+
+            while (true)
+            {
+                TakeAllItems(cpu, gameOutput);
+                if (gameOutput.Contains("Security Checkpoint"))
+                {
+                    if (!securityVisited)
+                    {
+                        // first time here, turn around to get all items
+                        facing = (Directions) (((int) facing + 2) % 4);
+                        securityVisited = true;
+                    }
+                    else
+                    {
+                        return Force(cpu);
+                    }
+                }
+                else
+                {
+                    var doors = GetDoors(gameOutput);
+                    facing = TakeLeft(facing, doors);
+                }
+
+                gameOutput = cpu.Run(facing.ToString());
+                //Console.ReadKey(true);
+            }
+        }
+
+        private static readonly string[] UnsafeItems = {"molten lava", "photons", "escape pod", "infinite loop", "giant electromagnet"};
+
+        public void TakeAllItems(AsciiComputer cpu, string gameOutput)
+        {
+            var itemsHere = GetList(gameOutput, "Items here:");
+            foreach (var item in itemsHere.Except(UnsafeItems))
+            {
+                 cpu.Run("take " + item);
+            }
+        }
+
+        public Directions[] GetDoors(string gameOutput) =>
+            GetList(gameOutput, "Doors here lead:")
+                .Select(d => Enum.TryParse(d, out Directions res) ? res : Directions.north).ToArray();
+
+        public enum Directions {north, east, south, west}
+
+        Directions TakeLeft(Directions heading, Directions[] doors)
+        {
+            // turn left
+            var newHeading = ((int)heading + 3) % 4;
+            while (!doors.Contains((Directions)newHeading))
+            {
+                newHeading = (newHeading + 1) % 4;
+            }
+
+            return (Directions) newHeading;
+        }
+
         private int Force(AsciiComputer cpu)
         {
             var all = GetInventory(cpu);
@@ -79,6 +142,11 @@ namespace AdventOfCode2019
         private string[] GetList(string output, string listName)
         {
             var lines = output.Split('\n');
+            if (lines.Any(l=>l.Contains("Alert!")))
+            {
+                lines = lines.SkipWhile(l => !l.Contains("Alert")).ToArray();
+            }
+
             return lines.SkipWhile(l => l != listName).Skip(1).TakeWhile(l => l.StartsWith('-')).Select(l => l.Substring(2))
                 .ToArray();
         }
@@ -97,48 +165,5 @@ namespace AdventOfCode2019
 
             throw new InvalidOperationException("unexpected result");
         }
-
-        private void GetAllItemsAndGoToSecurity(AsciiComputer cpu)
-        {
-            foreach (var command in GetAllItemsScript)
-            {
-                //Console.WriteLine(">>" + command);
-                var output = cpu.Run(command);
-                //Console.Write(output);
-            }
-        }
-
-
-        public string[] GetAllItemsScript = new[]
-        {
-            "east",
-            "take loom",
-            "south",
-            "take ornament",
-            "west",
-            "north",
-            "take candy cane",
-            "south",
-            "east",
-            "north",
-            "east",
-            "take fixed point",
-            "north",
-            "take spool of cat6",
-            "north",
-            "take weather machine",
-            "south",
-            "west",
-            "take shell",
-            "east",
-            "south",
-            "west",
-            "west",
-            "north",
-            "take wreath",
-            "north",
-            "east"
-        };
-
     }
 }
