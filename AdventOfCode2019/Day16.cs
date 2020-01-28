@@ -6,10 +6,10 @@ namespace AdventOfCode2019
     public class Day16
     {
 
-        [Result(63483758)]
+        [Result("63483758")]
         public static string GetAnswer1(string input) => MergeOutput(GetValues(ParseInputDigits(input), 100, 0, 8));
 
-        [Result(96099551)]
+        [Result("96099551")]
         public static string GetAnswer2(string input)
         {
             var inputDigits = ParseInputDigits(input);
@@ -17,8 +17,8 @@ namespace AdventOfCode2019
             // repeat 10.000 times
             var fullInput = Enumerable.Repeat(inputDigits, 10_000).SelectMany(i=>i).ToArray();
             var messageOffset = int.Parse(input.Substring(0, 7));
-
-            var values = SimulatePhasesBottom(fullInput, 100).Skip(messageOffset).Take(8).ToArray();
+            var relevantInput = fullInput.Skip(messageOffset).ToArray();
+            var values = SimulatePhasesBottom(relevantInput, 100).Take(8).ToArray();
             return MergeOutput(values);
         }
 
