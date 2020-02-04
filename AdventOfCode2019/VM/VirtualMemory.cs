@@ -10,17 +10,17 @@ namespace AdventOfCode2019.VM
 
     public class VirtualMemory 
     {
-        private BigInteger[] _store;
-        ImmutableDictionary<BigInteger, BigInteger> _storeBig = ImmutableDictionary<BigInteger, BigInteger>.Empty;
+        private long[] _store;
+        ImmutableDictionary<long, long> _storeBig = ImmutableDictionary<long, long>.Empty;
 
-        public VirtualMemory(IEnumerable<BigInteger> load)
+        public VirtualMemory(IEnumerable<long> load)
         {
             var data = load.ToList();
-            _store = new BigInteger[data.Count * 2];
+            _store = new long[data.Count * 10];
             data.CopyTo(_store);
         }
 
-        public BigInteger this[BigInteger address]
+        public long this[long address]
         {
             get => address < _store.Length ? 
                 _store[(long)address] : _storeBig.TryGetValue(address, out var result) ? result: 0;
@@ -30,7 +30,10 @@ namespace AdventOfCode2019.VM
                 {
                     _store[(int)address] = value;
                 }
-                _storeBig = _storeBig.SetItem(address, value);
+                else
+                {
+                    _storeBig = _storeBig.SetItem(address, value);
+                }
             }
         }
 
@@ -40,10 +43,10 @@ namespace AdventOfCode2019.VM
         public VirtualMemory Clone () =>
             new VirtualMemory
             {
-                _store = (BigInteger[]) _store.Clone(), 
+                _store = (long[]) _store.Clone(), 
                 _storeBig = _storeBig
             };
 
-        public BigInteger[] Dump => (BigInteger[])_store.Clone();
+        public long[] Dump => (long[])_store.Clone();
     }
 }

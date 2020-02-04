@@ -18,9 +18,8 @@ namespace AdventOfCodeTest2019Test
             var program = new [] {109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99};
             var computer = new IntCodeComputer(program);
 
-            //computer.Output.AsIEnumerableAsync().Result.Should().BeEquivalentTo(program.Select(i=>(BigInteger)i));
             computer.Run();
-            computer.ReadAvailableOutput().Should().BeEquivalentTo(program.Select(i=>(BigInteger)i));
+            computer.ReadAvailableOutput().Should().BeEquivalentTo(program);
         }
 
         [Fact]
@@ -35,7 +34,7 @@ namespace AdventOfCodeTest2019Test
         [Fact]
         public void LargeNumberDataTest()
         {
-            var program = new BigInteger[] {104,1125899906842624,99};
+            var program = new long[] {104,1125899906842624,99};
             var computer = new IntCodeComputer(program);
             computer.Run();
             computer.ReadOutput().Should().Be(1125899906842624);

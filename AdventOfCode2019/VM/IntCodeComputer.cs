@@ -21,28 +21,27 @@ namespace AdventOfCode2019.VM
 
     public class IntCodeComputer
     {
-        private BigInteger _programCounter = 0;
+        private long _programCounter = 0;
         public VirtualMemory Program;
-        private BigInteger _relativeBase = 0;
+        private long _relativeBase = 0;
         private int _ticks;
 
-        private readonly Queue<BigInteger> _inputChannel = new Queue<BigInteger>();
-        private readonly Queue<BigInteger> _outputChannel = new Queue<BigInteger>();
+        private readonly Queue<long> _inputChannel = new Queue<long>();
+        private readonly Queue<long> _outputChannel = new Queue<long>();
 
-        public IntCodeComputer(string program) : this(program.Split(',').Select(s=>BigInteger.Parse(s.Trim()))) {}
+        public IntCodeComputer(string program) : this(program.Split(',').Select(s=>long.Parse(s.Trim()))) {}
 
-        public IntCodeComputer(IEnumerable<int> program)  : this(program.Select(i=>(BigInteger)i)) {}
-        public IntCodeComputer(IEnumerable<long> program)  : this(program.Select(i=>(BigInteger)i)) {}
+        public IntCodeComputer(IEnumerable<int> program)  : this(program.Select(i=>(long)i)) {}
 
-        public IntCodeComputer(IEnumerable<BigInteger> program)
+        public IntCodeComputer(IEnumerable<long> program)
         {
             Program = new VirtualMemory(program.ToArray());
         }
 
         private IntCodeComputer(IntCodeComputer copyFrom)
         {
-            _inputChannel = new Queue<BigInteger>(copyFrom._inputChannel);
-            _outputChannel = new Queue<BigInteger>(copyFrom._outputChannel);
+            _inputChannel = new Queue<long>(copyFrom._inputChannel);
+            _outputChannel = new Queue<long>(copyFrom._outputChannel);
             _programCounter = copyFrom._programCounter;
             _relativeBase = copyFrom._relativeBase;
             _ticks = copyFrom._ticks;
@@ -62,7 +61,7 @@ namespace AdventOfCode2019.VM
             }
         }
 
-        public void Run(params BigInteger[] input)
+        public void Run(params long[] input)
         {
             foreach (var value in input)
             {
@@ -72,10 +71,10 @@ namespace AdventOfCode2019.VM
             Run();
         }
 
-        public BigInteger ReadOutput() => _outputChannel.Dequeue();
+        public long ReadOutput() => _outputChannel.Dequeue();
         public bool IsOutputAvailable => _outputChannel.Any();
 
-        public BigInteger[] ReadAvailableOutput()
+        public long[] ReadAvailableOutput()
         {
             var result = _outputChannel.ToArray();
             _outputChannel.Clear();
@@ -106,7 +105,7 @@ namespace AdventOfCode2019.VM
             };
         }
 
-        private bool Execute(Action<BigInteger> action)
+        private bool Execute(Action<long> action)
         {
             var param = GetParam(1);
             _programCounter += 2;
@@ -114,7 +113,7 @@ namespace AdventOfCode2019.VM
             return true;
         }
 
-        private bool Execute(Action<BigInteger, BigInteger> action)
+        private bool Execute(Action<long, long> action)
         {
             var p1 = GetParam(1);
             var p2 = GetParam(2);
@@ -123,7 +122,7 @@ namespace AdventOfCode2019.VM
             return true;
         }
 
-        private bool Execute(Func<BigInteger, BigInteger, BigInteger> func)
+        private bool Execute(Func<long, long, long> func)
         {
             var p1 = GetParam(1);
             var p2 = GetParam(2);
@@ -139,7 +138,7 @@ namespace AdventOfCode2019.VM
             return false;
         }
 
-        private void JumpIfTrue(BigInteger x, BigInteger y)
+        private void JumpIfTrue(long x, long y)
         {
             if (x != 0)
             {
@@ -147,7 +146,7 @@ namespace AdventOfCode2019.VM
             }
         }
 
-        private void JumpIfFalse(BigInteger x, BigInteger y)
+        private void JumpIfFalse(long x, long y)
         {
             if (x == 0)
             {
@@ -165,14 +164,14 @@ namespace AdventOfCode2019.VM
             return true;
         }
 
-        void Store(BigInteger value, int number)
+        void Store(long value, int number)
         {
             Program[ResolveAddress(number)] = value;
         }
 
-        BigInteger GetParam(int number) => Program[ResolveAddress(number)];
+        long GetParam(int number) => Program[ResolveAddress(number)];
         
-        BigInteger ResolveAddress(int argumentNumber) =>
+        long ResolveAddress(int argumentNumber) =>
             Mode(argumentNumber) switch
             {
                 1 => _programCounter + argumentNumber,
@@ -182,6 +181,14 @@ namespace AdventOfCode2019.VM
 
         int Mode(int arg) => GetDigit((int)Program[_programCounter], arg+1);
 
-        int GetDigit(int input, int number) => input / (int) Math.Pow(10, number) % 10;
+        int GetDigit(int input, int number) =>
+            number switch
+            {
+                1 => (input / 10) % 10,
+                2 => (input / 100) % 10,
+                3 => (input / 1000) % 10,
+                4 => (input / 10000) % 10,
+                     _ => throw new InvalidOperationException("Invalid argument number")
+            };
     }
 }

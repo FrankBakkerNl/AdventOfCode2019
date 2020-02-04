@@ -34,7 +34,7 @@ namespace AdventOfCode2019
 
         public static BigInteger GetThrusterSignal(int[] program, IEnumerable<int> phaseSettings)
         {
-            var lastResult = new BigInteger[]{0};
+            var lastResult = new long[]{0};
             foreach (var phaseSetting in phaseSettings)
             {
                 var amp = new IntCodeComputer(program);
@@ -69,7 +69,7 @@ namespace AdventOfCode2019
                 amp.Run(phaseSetting);
             }
 
-            var lastResult = new BigInteger[]{0};
+            var lastResult = new long[]{0};
             while (!amps.Last().Finished)
             {
                 foreach (var amp in amps)

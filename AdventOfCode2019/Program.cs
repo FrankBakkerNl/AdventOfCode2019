@@ -21,7 +21,7 @@ namespace AdventOfCode2019
 
             var testDays = days.Where(d => d.GetCustomAttribute<TestAttribute>() != null).ToList();
             if (testDays.Any()) days = testDays;
-
+            var totalTime = Stopwatch.StartNew();
             foreach (var dayClass in days)
             {
                 WriteLine(dayClass.Name);
@@ -31,6 +31,7 @@ namespace AdventOfCode2019
 
                 WriteLine();
             }
+            WriteLine($"Total: {totalTime.Elapsed}");
         }
 
         public static void GetAnswer(Type dayClass, int part)

@@ -27,7 +27,7 @@ namespace AdventOfCode2019.VM
         {
             if (EchoInput) Console.WriteLine(command);
 
-            _cpu.Run(command.Select(i => ((BigInteger) (int) i)).ToArray());
+            _cpu.Run(command.Select(i => ( (long) i)).ToArray());
             _cpu.Run(10);
             var output = _cpu.ReadAvailableOutput();
             ResultCode = (long)output.LastOrDefault();

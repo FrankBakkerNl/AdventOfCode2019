@@ -9,7 +9,7 @@ namespace AdventOfCode2019
         [Result(2457252183)]
         public static long GetAnswer1(string input)
         {
-            var program = input.Split(',').Select(BigInteger.Parse);
+            var program = input.Split(',').Select(long.Parse);
             var computer = new IntCodeComputer(program);
             computer.Run(1);
             return (long)computer.ReadOutput();
@@ -18,7 +18,7 @@ namespace AdventOfCode2019
         [Result(70634)]
         public static long GetAnswer2(string input)
         {
-            var program = input.Split(',').Select(BigInteger.Parse);
+            var program = input.Split(',').Select(long.Parse);
             var computer = new IntCodeComputer(program);
             computer.Run(2);
             return (long)computer.ReadOutput();

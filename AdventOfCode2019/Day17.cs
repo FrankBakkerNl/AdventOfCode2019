@@ -185,7 +185,7 @@ namespace AdventOfCode2019
 
         private static void InputLine(IntCodeComputer cpu, string line)
         {
-            cpu.Run(line.Select(c => (BigInteger) c).ToArray());
+            cpu.Run(line.Select(c => (long) c).ToArray());
             cpu.Run(10);
         }
 

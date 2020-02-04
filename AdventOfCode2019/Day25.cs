@@ -12,7 +12,7 @@ namespace AdventOfCode2019
         [Result(352325632)]
         public int GetAnswer1(long[] program)
         {
-            var cpu = new IntCodeComputer(program.Select(i => (BigInteger) i));
+            var cpu = new IntCodeComputer(program);
             var asciiComputer =  new AsciiComputer(cpu);
 
             return WallFollower(asciiComputer);
@@ -24,7 +24,7 @@ namespace AdventOfCode2019
             while (true)
             {
                 Console.WriteLine("****** Start New Game! ******");
-                var cpu = new IntCodeComputer(program.Select(i => (BigInteger) i));
+                var cpu = new IntCodeComputer(program);
                 var asciiComputer =  new AsciiComputer(cpu);
 
                 Console.Write(asciiComputer.Run());
