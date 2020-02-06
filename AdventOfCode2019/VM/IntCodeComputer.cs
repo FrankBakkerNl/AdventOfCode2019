@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 
 namespace AdventOfCode2019.VM
 {
@@ -21,10 +20,11 @@ namespace AdventOfCode2019.VM
 
     public class IntCodeComputer
     {
-        private long _programCounter = 0;
         public VirtualMemory Program;
-        private long _relativeBase = 0;
+        private long _programCounter;
+        private long _relativeBase;
         private int _ticks;
+        private int _argumentModes;
 
         private readonly Queue<long> _inputChannel = new Queue<long>();
         private readonly Queue<long> _outputChannel = new Queue<long>();
@@ -35,7 +35,7 @@ namespace AdventOfCode2019.VM
 
         public IntCodeComputer(IEnumerable<long> program)
         {
-            Program = new VirtualMemory(program.ToArray());
+            Program = new VirtualMemory(program);
         }
 
         private IntCodeComputer(IntCodeComputer copyFrom)
@@ -48,17 +48,14 @@ namespace AdventOfCode2019.VM
             Program = copyFrom.Program.Clone();
         }
 
-        public IntCodeComputer CloneState()
-        {
-            return new IntCodeComputer(this);
-        }
+        public IntCodeComputer CloneState() => new IntCodeComputer(this);
 
         public void Run()
         { 
-            while (Process()) 
-            {
-              _ticks++;
-            }
+            while (Process()) _ticks++;
+
+            // last operation was Stop or blocking Input so reset _programCounter
+            _programCounter--;
         }
 
         public void Run(params long[] input)
@@ -81,114 +78,72 @@ namespace AdventOfCode2019.VM
             return result;
         }
 
-        public bool Finished { get; private set; }
+        public bool Finished => Program[_programCounter] == 99;
 
         public override string ToString() => $"ip:{_programCounter} op:{Program[_programCounter]} ticks:{_ticks}";
 
         private bool Process()
         {
-            var instruction = (OpCode)(int)(Program[_programCounter] % 100);
+            var instruction = (int)(Program[_programCounter++]);
+            _argumentModes = instruction / 100;
 
-            return instruction switch
+            return (OpCode)(instruction %100) switch
             {
-                OpCode.Add =>                Execute((x,y) => x + y),
-                OpCode.Multiply =>           Execute((x,y) => x * y),
+                OpCode.Add =>                Execute( (x, y) => x + y),
+                OpCode.Multiply =>           Execute( (x, y) => x * y),
                 OpCode.Input =>              ReadInput(),
-                OpCode.Output =>             Execute(x=>_outputChannel.Enqueue(x)),
-                OpCode.JumpIfTrue =>         Execute(JumpIfTrue),
-                OpCode.JumpIfFalse =>        Execute(JumpIfFalse),
-                OpCode.LessThan =>           Execute((x,y) => x < y ? 1 : 0),
-                OpCode.Equals =>             Execute((x,y) => x == y ? 1 : 0),
-                OpCode.RelativeBaseOffset => Execute(x => { _relativeBase += x; }),
-                OpCode.Stop =>               Stop(),
-                _ => throw new InvalidOperationException($"Invalid opCode {instruction} at {_programCounter}"),
+                OpCode.Output =>             Execute( x=>_outputChannel.Enqueue(x)),
+                OpCode.JumpIfTrue =>         Execute( (x, y) => { if (x != 0) _programCounter = y;}),
+                OpCode.JumpIfFalse =>        Execute( (x, y) => { if (x == 0) _programCounter = y;}),
+                OpCode.LessThan =>           Execute( (x, y) => x < y ? 1 : 0),
+                OpCode.Equals =>             Execute( (x, y) => x == y ? 1 : 0),
+                OpCode.RelativeBaseOffset => Execute( x => { _relativeBase += x; }),
+                OpCode.Stop =>               false,
+                _ => throw new InvalidOperationException($"Invalid opCode {instruction} at {_programCounter-1}"),
             };
         }
 
         private bool Execute(Action<long> action)
         {
-            var param = GetParam(1);
-            _programCounter += 2;
-            action(param);
+            action(GetParam());
             return true;
         }
 
         private bool Execute(Action<long, long> action)
         {
-            var p1 = GetParam(1);
-            var p2 = GetParam(2);
-            _programCounter += 3;
-            action(p1, p2);
+            action(GetParam(), GetParam());
             return true;
         }
 
         private bool Execute(Func<long, long, long> func)
         {
-            var p1 = GetParam(1);
-            var p2 = GetParam(2);
-            var addrRes = ResolveAddress(3);
-            _programCounter += 4;
-            Program[addrRes] = func(p1, p2);
+            SetParam(func(GetParam(), GetParam()));
             return true;
         }
         
-        private bool Stop()
-        {
-            Finished = true;
-            return false;
-        }
-
-        private void JumpIfTrue(long x, long y)
-        {
-            if (x != 0)
-            {
-                _programCounter = y;
-            }
-        }
-
-        private void JumpIfFalse(long x, long y)
-        {
-            if (x == 0)
-            {
-                _programCounter = y;
-            }
-        }
-
         private bool ReadInput()
         {
             if (!_inputChannel.Any()) return false;
 
-            var value = _inputChannel.Dequeue();
-            Store(value, 1);
-            _programCounter += 2;
+            SetParam(_inputChannel.Dequeue());
             return true;
         }
 
-        void Store(long value, int number)
-        {
-            Program[ResolveAddress(number)] = value;
-        }
-
-        long GetParam(int number) => Program[ResolveAddress(number)];
+        long GetParam() => Program[ResolveAddress()];
+        void SetParam(long val) => Program[ResolveAddress()] = val;
         
-        long ResolveAddress(int argumentNumber) =>
-            Mode(argumentNumber) switch
-            {
-                1 => _programCounter + argumentNumber,
-                2 => Program[_programCounter + argumentNumber] + _relativeBase, // relative mode
-                _ => Program[_programCounter + argumentNumber]
-            };
+        long ResolveAddress()
+        {
+            var mode = _argumentModes % 10;
+            _argumentModes /= 10;
 
-        int Mode(int arg) => GetDigit((int)Program[_programCounter], arg+1);
-
-        int GetDigit(int input, int number) =>
-            number switch
+            return mode switch
             {
-                1 => (input / 10) % 10,
-                2 => (input / 100) % 10,
-                3 => (input / 1000) % 10,
-                4 => (input / 10000) % 10,
-                     _ => throw new InvalidOperationException("Invalid argument number")
+                0 => Program[_programCounter++],                 // position mode
+                1 => _programCounter++,                          // immediate mode
+                2 => Program[_programCounter++] + _relativeBase, // relative mode
+                _ => throw new InvalidOperationException($"Invalid argument mode {mode}")
             };
+        }
     }
 }
