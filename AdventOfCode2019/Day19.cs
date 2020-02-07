@@ -42,13 +42,23 @@ namespace AdventOfCode2019
             var (lower, upper) = FindInitialBounds(i=>HasDiagonalSize(isAffected, i, size -2), guess: size * 10);
             var diagoinalRow = BinarySearchWhile(i=>HasDiagonalSize(isAffected, i, size -2), lower, upper);
 
-            while (!HasDiagonalSize(isAffected, diagoinalRow, size))
+            var (col, row) = FindStepByStep(isAffected, diagoinalRow, 0, size);
+
+            return (col, row - size +1);
+        }
+
+        public static (int, int) FindStepByStep(Affected isAffected, int row, int col, int size)
+        {
+            while (!DiagonalFits(isAffected, row, col, size))
             {
-                diagoinalRow++;
+                row++;
+                while (!isAffected(col, row))
+                {
+                    col++;
+                }
             }
 
-            var startCol = ProbeLeftColOfBeam(isAffected, diagoinalRow, 0, true);
-            return (startCol, diagoinalRow - size +1);
+            return (col, row);
         }
 
 
