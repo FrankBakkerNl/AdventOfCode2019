@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using static System.Math;
 
@@ -39,14 +40,23 @@ namespace AdventOfCode2019
 
         private static int FindCycleLength((int, int)[] startState)
         {
-            var state = startState;
+            var state = startState.ToArray();
             var iteration = 0;
+            var output = new (int, int)[startState.Length];
             do
             {
                 iteration++;
-                state = Step(state);
-            } while (!state.SequenceEqual(startState));
+                Step(state, output);
+                Swap(ref state, ref output);
+            } while (!SetEquals(state, startState));
             return iteration;
+        }
+
+        static void Swap<T>(ref T x, ref T y)
+        {
+            T t = x;
+            x = y;
+            y = t;
         }
 
         private static long Gcd(long a, long b) => a % b == 0 ? b : Gcd(b, a % b);
@@ -58,11 +68,34 @@ namespace AdventOfCode2019
                 select (moon.p.Add(newVelocity), newVelocity))
             .ToArray();
 
-        public static (int p, int v)[] Step((int p, int v)[] allMoons) =>
-            (from moon in allMoons
-                let newVelocity = moon.v + allMoons.Sum(other => GetForce(moon.p, other.p))
-                select (moon.p + newVelocity, newVelocity))
-            .ToArray();
+
+        public static void Step((int p, int v)[] input, (int p, int v)[] output)
+
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                var (p, v) = input[i];
+                var totalForce = v;
+                for (int j = 0; j < input.Length; j++)
+                {
+                    if (i==j) continue;
+                    totalForce += GetForce(p, input[j].p);
+                }
+                output[i] = (p + totalForce, totalForce);
+            }
+        }
+
+        public static bool SetEquals((int p, int v)[] set1, (int p, int v)[] set2)
+        {
+            for (int i = 0; i < set1.Length; i++)
+            {
+                var moon1 = set1[i];
+                var moon2 = set2[i];
+                if (moon1.v != moon2.v || moon1.p != moon2.p) return false;
+            }
+
+            return true;
+        }
 
         public static (int, int)[][]Transpose(Vector[] input) => new[]
         {
