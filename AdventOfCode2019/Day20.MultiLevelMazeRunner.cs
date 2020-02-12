@@ -36,7 +36,7 @@ namespace AdventOfCode2019
                     0 => (Position.x - 1, Position.y),
                     1 => (Position.x, Position.y + 1),
                     2 => (Position.x + 1, Position.y),
-                    3 => (Position.x, Position.y - 1),
+                    _ => (Position.x, Position.y - 1),
                 };
                 var newLevel = Level;
                 if (maze.PortalMap.TryGetValue(newPosition, out var ported))

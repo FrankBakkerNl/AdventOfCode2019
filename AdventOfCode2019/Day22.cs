@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -39,6 +40,7 @@ namespace AdventOfCode2019
                  "deal into new stack" => Operation.DealIntoNewStack,
                  "deal with increment" => Operation.DealWithIncrement,
                  "cut" => Operation.Cut,
+                 var x  => throw new InvalidOperationException($"Invalid instruction {x}")
              };
 
              var param = match.Groups["n"].Success ? long.Parse(match.Groups["n"].Value) : 0;
@@ -56,7 +58,8 @@ namespace AdventOfCode2019
              {
                  Operation.DealIntoNewStack =>  (a: -BigInteger.One,       b: deckSize - 1L), // y = -x + ds - 1
                  Operation.Cut =>               (a: BigInteger.One,        b: deckSize - instruction.p), // y = x + ds - p
-                 Operation.DealWithIncrement => (a: instruction.p,         b: 0L) // y = p * x
+                 Operation.DealWithIncrement => (a: instruction.p,         b: 0L), // y = p * x
+                 var x  => throw new InvalidOperationException($"Invalid instruction {x}")
              };
              return ModuloShift(values, deckSize);
          }
