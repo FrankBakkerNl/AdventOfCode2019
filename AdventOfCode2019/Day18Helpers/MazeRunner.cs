@@ -18,7 +18,7 @@ namespace AdventOfCode2019.Day18Helpers
             MoveCount = moveCount;
         }
 
-        public bool HasAllKeys => _keys == _maze.AllKeys;
+        public bool HasAllKeys => (_keys & _maze.AllKeys) == _maze.AllKeys;
 
         public IEnumerable<MazeRunner> Children()
         {
