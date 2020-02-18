@@ -10,4 +10,10 @@
     <ProjectReference Include="..\AdventOfCode2019\AdventOfCode2019.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Day20Visualizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
